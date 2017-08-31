@@ -1,12 +1,9 @@
 import pandas as pd
 
 df2=pd.read_csv('601939.csv')
-
 df2=pd.DataFrame(df2,columns=['time', 'OpenPrice', 'highest', ..., 'ClosePrice', 'TradingVolume','OBV'])
-
 df_cp=df2['ClosePrice']
 df_cp.describe()
-
 
 #to see the latest 400 
 df=df2.loc[list(range(0,400))]
