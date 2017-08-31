@@ -28,3 +28,6 @@ listing['age'].describe()   #get the Quartile value
 
 #only if the listing is a dataframe type,use this to get a xlsx file
 listing.to_excel('haha.xlsx',sheet_name='listing',index=0)
+
+
+listing.to_csv('haha.csv')
