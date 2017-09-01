@@ -1,10 +1,15 @@
 
 import numpy as np
 import pandas as pd
+from pandas import DataFrame
 
 train_df = pd.read_csv('C:/work/house price/input/train.csv', index_col=0)
 
 #test_df = pd.read_csv('C:/work/house price/input/test.csv', index_col=0)
+
+df=pd.read_csv('GE_kW_2009.csv')
+df.shape
+dw=df.ix[list(range(0,52560)),list(range(5,58))]
 
 from sklearn.linear_model import Ridge
 from sklearn.model_selection import cross_val_score
