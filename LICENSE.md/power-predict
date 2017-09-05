@@ -123,7 +123,7 @@ def rmse(y_test, y):
 def nse(y_test, y):  
     return 1-((sp.mean(y - y_test)/sp.mean(y -sp.mean(y))) ** 2)
 
-def ccd(y_test, y):  
+def ccd(y_test, y):  #for CD error measurement
     k1=(sp.mean((y_test - y)*(y_test-sp.mean(y_test))))**2
     k2=sp.mean((y_test-sp.mean(y_test))**2)
     k3=sp.mean((y-sp.mean(y))**2)
