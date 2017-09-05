@@ -26,7 +26,7 @@ y_rf = rf.predict(X_test)
 RMSE_RF = mean_squared_error(y_real, y_rf)**0.5 #get the RMSE
 """
 
-
+#ccd is equal to CD for error measurment
 ccd(y_real, y_rf)
 Out[65]: 0.011701459602650515
 
