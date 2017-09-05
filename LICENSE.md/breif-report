@@ -1,0 +1,4 @@
+Based on the wind-predict file
+the prediction by training 09 year and test by 10 year, our focus is to get the power prediction of the sum of A01 to C16 wind turbines
+the time interval is set to 10 mins, our goal is to promote of accuarcy of like 30 mins or 60 mins prediction by our new method
+
