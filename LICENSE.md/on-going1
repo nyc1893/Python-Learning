@@ -1,0 +1,164 @@
+
+import numpy as np
+import pandas as pd
+from pandas import DataFrame
+import matplotlib.pyplot as plt  
+import scipy as sp  
+from scipy.stats import norm  
+from sklearn.pipeline import Pipeline  
+from sklearn.linear_model import LinearRegression  
+from sklearn.preprocessing import PolynomialFeatures  
+from sklearn import linear_model  
+
+def rmse(y_test, y):  
+    return sp.sqrt(sp.mean((y_test - y) ** 2)) 
+
+
+def nse(y_test, y):  
+    return 1-((sp.mean(y - y_test)/sp.mean(y -sp.mean(y))) ** 2)
+
+def ccd(y_test, y):  #for CD error measurement
+    k1=(sp.mean((y_test - y)*(y_test-sp.mean(y_test))))**2
+    k2=sp.mean((y_test-sp.mean(y_test))**2)
+    k3=sp.mean((y-sp.mean(y))**2)
+    return k1/(k2*k3)
+
+def pbias(y_test, y):  
+    return (sp.mean(y-y_test))/(sp.mean(y))
+
+def mape(y_test, y):  
+    return (100*sp.mean(abs(y_test-y)/abs(y_test)))
+
+df=pd.read_csv('GE_kW_2009.csv')
+df.shape
+#is nan?
+
+df.isnull().sum().sort_values(ascending=False).head(10)
+
+mean_cols = df.mean()
+
+df=df.fillna(0)
+#is zero?
+df[df<0]=0
+#df.to_csv('cici.csv')
+
+ #in order to get the sum of wind turbines
+dw=df.ix[list(range(0,52560)),list(range(5,58))]
+dw['ColSum']=dw.apply(lambda x:x.sum(),axis=1)  
+
+
+dd=pd.read_csv('MET_2009.csv')
+dd.isnull().sum()
+mean_cols = dd.mean()
+dd=dd.fillna(mean_cols)
+
+#dd.to_csv('cici2.csv')
+
+
+#take out too much time item
+#dd.ix[list(range(0,52560)),list(range(5,17))].head()
+
+dd=dd.ix[list(range(0,52560)),list(range(5,17))]
+dd.keys()
+
+
+dt=pd.read_csv('GE_kW_2010.csv')
+mean_cols = dt.mean()
+dt=dt.fillna(mean_cols)
+#is zero?
+dt[dt<0]=0
+#dt.to_csv('cici2.csv')
+dt.ix[list(range(0,52560)),list(range(5,58))].head()
+dt=dt.ix[list(range(0,52560)),list(range(5,58))]
+dt['ColSum']=dt.apply(lambda x:x.sum(),axis=1)  
+
+
+dk=pd.read_csv('MET_2010.csv')
+dk=dk.fillna(0)
+#dk[dk<0]=0
+dk=dk.ix[list(range(0,52560)),list(range(5,17))]
+
+
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn import datasets, linear_model
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+
+
+X_train = dd
+X_test = dk
+
+#y_train=dw['ColSum']
+power = pd.DataFrame({"power":dw['ColSum']/1000, "log(power + 1)":np.log1p(dw['ColSum']/1000)})
+power.hist()
+
+y_train=power['log(power + 1)']
+y_real=dt['ColSum']/1000
+
+regr = linear_model.LinearRegression()
+regr.fit(X_train, y_train)
+y_pred = regr.predict(X_test)
+
+
+c1=pd.DataFrame(y_pred,columns=['y_pred'])# numpuy.array to DataFrame
+c2=pd.DataFrame(y_real)
+c1.head()
+c2.head()
+c3=pd.concat([c1, c2], axis=1)
+
+plt.figure(); 
+c3.plot();
+plt.show(); 
+
+from sklearn.metrics import mean_squared_error
+RMSE = mean_squared_error(y_real, y_pred)**0.5 #get the RMSE
+
+
+
+
+from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import RandomForestRegressor
+
+max_features = [.1, .2,.3,.4, .5, .7, .9 ]
+test_scores = []
+for max_feat in max_features:
+    clf = RandomForestRegressor(n_estimators=200, max_features=max_feat)
+    test_score = np.sqrt(-cross_val_score(clf, X_train, y_train, cv=5, scoring='neg_mean_squared_error'))
+    test_scores.append(np.mean(test_score))
+
+plt.plot(max_features, test_scores)
+plt.title("Max Features vs CV Error");
+plt.show()
+
+
+rf = RandomForestRegressor(n_estimators=500, max_features=.3)
+rf.fit(X_train, y_train)
+y_rf = np.expm1(rf.predict(X_test))
+RMSE_RF = mean_squared_error(y_real, y_rf)**0.5 #get the RMSE
+
+
+
+
+
+
+"""
+
+
+
+
+y_real.iloc[list(range(0,5))]
+"""
+
+
+
+
+
+
+
+
+
+
+
+
+
