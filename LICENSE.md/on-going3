@@ -1,10 +1,3 @@
-"""
-This is the code for AR and AR+SVR , AR+ RFR
-For AR  GE 1530 data for training, the rest of 16000 for predicting
-For ML  2009MET data(the first 1530 data are not conclude)+  2010 MET
-1530 data for training  the error prediction=17520 datasets , the rest
-of 16000 MET data for predicting.
-"""
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
@@ -50,7 +43,7 @@ K = np.array(dt['ColSum']/1000)
 
 
 
-predict_num=16000# have to less than 17520,K ---> 2010,X --->2009
+predict_num=2000# have to less than 17520,K ---> 2010,X --->2009
 
 ddd=dd.reset_index(drop = True)
 ddd=ddd.ix[ddd.index,list(range(0,12))]
@@ -89,10 +82,10 @@ error2 = mean_squared_error(test, predictions_09)**0.5 #get the RMSE
 tp= pd.DataFrame(test-predictions_09)  #tp is error between AR predict and real
 error3=tp.describe()
 #print('Predicting number is: %f' % predict_num)
-print('Test MSE: %.3f' % error)
-print('Test RMSE: %.3f' % error2)
+print('AR_09 MSE: %.3f' % error)
+print('AR_09 RMSE: %.3f' % error2)
 print(error3)
-
+print(window)
 
 #AR train for 2010
 train, test = K[1:len(X)-predict_num], K[len(X)-predict_num:]
@@ -122,7 +115,7 @@ error3=tp.describe()
 #print('Predicting number is: %f' % predict_num)
 print('AR_2010 MSE: %.3f' % error)
 print('AR_2010 RMSE: %.3f' % error2)
-
+print(error3)
 
 
 
@@ -156,8 +149,10 @@ j1= ddk[index]
 
 pyplot.plot(j1['Temp H'], 'cx--', j1['WS A H1'], 'mo:', j1['WS A H2'], 'kp-.')
 
-
 """
+
+
+
 from sklearn.svm import SVR
 
 train_df=pd.concat((ddd.loc[len(X)-predict_num:],ddk.loc[0:len(X)-predict_num]))
@@ -178,25 +173,27 @@ svr_poly=SVR(kernel='poly',C=1e3,degree=2)
 
 y_rbf=svr_rbf.fit(X_train,y_train).predict(X_test)
 
-
+"""
 error = mean_squared_error(y_real, y_rbf)
 error2 = mean_squared_error(y_real, y_rbf)**0.5 #get the RMSE
 print('RBF SVR MSE: %.3f' % error)
 print('RBF SVR RMSE: %.3f' % error2)
-
+"""
 
 
 pw=np.array(predictions_10)
 pw_pred=pw
 
-pw_real=K[len(X)-predict_num:]
+pw_real=test
+
+
 new_pred=y_rbf+pw_pred
 
 
 error = mean_squared_error(pw_real, new_pred)
 error2 = mean_squared_error(pw_real, new_pred)**0.5 #get the RMSE
-print('new_pred MSE: %.3f' % error)
-print('new_pred RMSE: %.3f' % error2)
+print('SVR MSE: %.3f' % error)
+print('SVR RMSE: %.3f' % error2)
 
 
 
@@ -223,7 +220,7 @@ print('POLY SVR RMSE: %.3f' % error2)
 from sklearn.model_selection import cross_val_score
 from sklearn.ensemble import RandomForestRegressor
 
-max_features = [.1, .2 ]
+max_features = [.1, .2 ,.3,.4]
 test_scores = []
 for max_feat in max_features:
     clf = RandomForestRegressor(n_estimators=300, max_features=max_feat)
@@ -247,7 +244,7 @@ new_pred=y_rf+pw_pred
 
 y_real = tp2
 
-error = mean_squared_error(y_real, y_rf)
-error2 = mean_squared_error(y_real, y_rf)**0.5 #get the RMSE
-print('RF MSE: %.3f' % error)
-print('RF RMSE: %.3f' % error2)
+error1 = mean_squared_error(test, new_pred)
+error12 = mean_squared_error(test, new_pred)**0.5 #get the RMSE
+print('RF MSE: %.3f' % error1)
+print('RF RMSE: %.3f' % error12)
