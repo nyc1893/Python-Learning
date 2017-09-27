@@ -1,0 +1,115 @@
+from pandas import Series
+from pandas import DataFrame
+from pandas import concat
+from matplotlib import pyplot
+
+import numpy as np
+import pandas as pd
+
+import matplotlib.pyplot as plt
+
+from pandas import Series
+from matplotlib import pyplot
+from statsmodels.tsa.ar_model import AR
+
+
+test = pd.read_csv('data1.txt', sep=" ", header=None)
+df=concat([test.shift(1),test],axis=1)
+df.corr()
+
+from statsmodels.graphics.tsaplots import plot_acf
+
+df1=concat([test.shift(1),test],axis=1)
+df1=concat([test.shift(2),df1],axis=1)
+
+df1.corr()
+
+
+from numpy import *
+r1=0.941993
+r2=0.781669
+
+A=mat([[1,r1],[r1,1]])
+B=mat([[r1],[r2]])
+C=A.I*B
+#2th coefficient
+
+
+df1=concat([test.shift(1),test],axis=1)
+df1=concat([test.shift(2),df1],axis=1)
+df1=concat([test.shift(3),df1],axis=1)
+df1.dropna()
+R=df1.corr()
+r1=R.iloc[0,1]
+r2=R.iloc[0,2]
+r3=R.iloc[0,3]
+
+A=mat([[1,r1,r2],[r1,1,r1],[r2,r1,1]])
+B=mat([[r1],[r2],[r3]])
+C=A.I*B
+#3th coefficient
+
+
+
+
+test = pd.read_csv('data2.txt', sep=" ", header=None)
+df1=concat([test.shift(1),test],axis=1)
+df1=concat([test.shift(2),df1],axis=1)
+df1=concat([test.shift(3),df1],axis=1)
+df1=concat([test.shift(4),df1],axis=1)
+df1=concat([test.shift(5),df1],axis=1)
+
+R=df1.corr()
+r1=R.iloc[0,1]
+r2=R.iloc[0,2]
+r3=R.iloc[0,3]
+r4=R.iloc[0,4]
+r5=R.iloc[0,5]
+
+A=mat([[1,r1,r2,r3,r4],[r1,1,r1,r2,r3],[r2,r1,1,r1,r2],[r3,r2,r1,1,r1],[r4,r3,r2,r1,1]])
+B=mat([[r1],[r2],[r3],[r4],[r5]])
+C=A.I*B
+
+
+
+
+
+
+def add(a,b):
+	return a+b
+
+
+
+
+"""
+pred only follow the input
+"""
+values = test 
+dataframe = concat([values.shift(1), values], axis=1)
+dataframe.columns = ['t-1', 't+1']
+# split into train and test sets
+X = dataframe.values
+train, test = X[1:len(X)-7], X[len(X)-7:]
+train_X, train_y = train[:,0], train[:,1]
+test_X, test_y = test[:,0], test[:,1]
+ 
+# persistence model
+def model_persistence(x):
+	return x
+ 
+# walk-forward validation
+predictions = list()
+for x in test_X:
+	yhat = model_persistence(x)
+	predictions.append(yhat)
+test_score = mean_squared_error(test_y, predictions)
+print('Test MSE: %.3f' % test_score)
+# plot predictions vs expected
+pyplot.plot(test_y)
+pyplot.plot(predictions, color='red')
+pyplot.show()
+
+
+all the math inform comes from:
+http://paulbourke.net/miscellaneous/ar/
+
