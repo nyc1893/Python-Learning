@@ -1,0 +1,804 @@
+"""
+60 min 前一半数据训练 后一半数据 test 时候用默认的  GBT做预测得到：
+训练数据 k1~k6  以及20个 lag  +  pred   训练的y 直接是  real 
+AR RMSE: 13.312199633
+AR+GBR RMSE: 7.694859557
+
+SVR
+AR RMSE: 13.312199633
+AR+SVR RMSE: 26.005626420
+
+训练数据 k1~k6  以及20个 lag  （未加 pred   ）训练的y 直接是  real 
+AR RMSE: 13.312199633
+AR+GBR RMSE: 8.837246654
+
+SVR
+AR RMSE: 13.312199633
+AR+SVR RMSE: 26.005626421
+
+训练数据 k1~k6  以及20个 lag  （未加 pred   ）训练的y 直接是  real 
+AR RMSE: 13.312199633
+AR+GBR RMSE: 9.777974073
+
+SVR
+AR RMSE: 13.312199633
+AR+SVR RMSE: 13.274609629
+
+
+训练数据 k1~k6  以及20个 lag  （加 pred   ）训练的y 直接是  real 
+AR RMSE: 13.312199633
+AR+GBR RMSE: 8.464140698
+SVR
+AR RMSE: 13.312199633
+AR+SVR RMSE: 13.274609629
+
+
+"""
+
+#processing
+import numpy as np
+import pandas as pd
+from pandas import DataFrame
+import matplotlib.pyplot as plt
+
+from pandas import Series
+from matplotlib import pyplot
+from statsmodels.tsa.ar_model import AR
+from sklearn.metrics import mean_squared_error
+
+
+df=pd.read_csv('C:\\Users\\yunchuanl\\PycharmProjects\\ongoing2\\60dd.csv')
+
+k1=df['k1']
+k1_0=k1
+kt=k1.ix[df.index-1]
+k1_1=kt
+kt=k1.ix[kt.index-1]
+k1_2=kt
+kt=k1.ix[kt.index-1]
+k1_3=kt
+kt=k1.ix[kt.index-1]
+k1_4=kt
+kt=k1.ix[kt.index-1]
+k1_5=kt
+kt=k1.ix[kt.index-1]
+k1_6=kt
+kt=k1.ix[kt.index-1]
+k1_7=kt
+kt=k1.ix[kt.index-1]
+k1_8=kt
+kt=k1.ix[kt.index-1]
+k1_9=kt
+kt=k1.ix[kt.index-1]
+k1_10=kt
+kt=k1.ix[kt.index-1]
+k1_11=kt
+kt=k1.ix[kt.index-1]
+k1_12=kt
+kt=k1.ix[kt.index-1]
+k1_13=kt
+kt=k1.ix[kt.index-1]
+k1_14=kt
+kt=k1.ix[kt.index-1]
+k1_15=kt
+kt=k1.ix[kt.index-1]
+k1_16=kt
+kt=k1.ix[kt.index-1]
+k1_17=kt
+kt=k1.ix[kt.index-1]
+k1_18=kt
+kt=k1.ix[kt.index-1]
+k1_19=kt
+kt=k1.ix[kt.index-1]
+k1_20=kt
+
+k1_1=k1_1.reset_index(drop = True)
+k1_2=k1_2.reset_index(drop = True)
+k1_3=k1_3.reset_index(drop = True)
+k1_4=k1_4.reset_index(drop = True)
+k1_5=k1_5.reset_index(drop = True)
+k1_6=k1_6.reset_index(drop = True)
+k1_7=k1_7.reset_index(drop = True)
+k1_8=k1_8.reset_index(drop = True)
+k1_9=k1_9.reset_index(drop = True)
+k1_10=k1_10.reset_index(drop = True)
+k1_11=k1_11.reset_index(drop = True)
+k1_12=k1_12.reset_index(drop = True)
+k1_13=k1_13.reset_index(drop = True)
+k1_14=k1_14.reset_index(drop = True)
+k1_15=k1_15.reset_index(drop = True)
+k1_16=k1_16.reset_index(drop = True)
+k1_17=k1_17.reset_index(drop = True)
+k1_18=k1_18.reset_index(drop = True)
+k1_19=k1_19.reset_index(drop = True)
+k1_20=k1_20.reset_index(drop = True)
+
+
+k1_1=k1_0-k1_1
+k1_2=k1_0-k1_2
+k1_3=k1_0-k1_3
+k1_4=k1_0-k1_4
+k1_5=k1_0-k1_5
+k1_6= k1_0-k1_6
+k1_7= k1_0-k1_7
+k1_8= k1_0-k1_8
+k1_9= k1_0-k1_9
+k1_10= k1_0-k1_10
+k1_11= k1_0-k1_11
+k1_12=k1_0-k1_12
+k1_13= k1_0-k1_13
+k1_14= k1_0-k1_14
+k1_15= k1_0-k1_15
+k1_16= k1_0-k1_16
+k1_17= k1_0-k1_17
+k1_18= k1_0-k1_18
+k1_19= k1_0-k1_19
+k1_20= k1_0-k1_20
+
+dt=pd.DataFrame({'k1_0':k1_0,'k1_1':k1_1,'k1_2':k1_2,'k1_3':k1_3,'k1_4':k1_4,'k1_5':k1_5,
+'k1_6':k1_6,'k1_7':k1_7,'k1_8':k1_8,'k1_9':k1_9,'k1_10':k1_10,
+'k1_11':k1_11,'k1_12':k1_12,'k1_13':k1_13,'k1_14':k1_14,'k1_15':k1_15,
+'k1_16':k1_16,'k1_17':k1_17,'k1_18':k1_18,'k1_19':k1_19,'k1_20':k1_20,
+ })
+
+dt=dt.dropna()
+
+k1=df['k2']
+k1_0=k1
+kt=k1.ix[df.index-1]
+k1_1=kt
+kt=k1.ix[kt.index-1]
+k1_2=kt
+kt=k1.ix[kt.index-1]
+k1_3=kt
+kt=k1.ix[kt.index-1]
+k1_4=kt
+kt=k1.ix[kt.index-1]
+k1_5=kt
+kt=k1.ix[kt.index-1]
+k1_6=kt
+kt=k1.ix[kt.index-1]
+k1_7=kt
+kt=k1.ix[kt.index-1]
+k1_8=kt
+kt=k1.ix[kt.index-1]
+k1_9=kt
+kt=k1.ix[kt.index-1]
+k1_10=kt
+kt=k1.ix[kt.index-1]
+k1_11=kt
+kt=k1.ix[kt.index-1]
+k1_12=kt
+kt=k1.ix[kt.index-1]
+k1_13=kt
+kt=k1.ix[kt.index-1]
+k1_14=kt
+kt=k1.ix[kt.index-1]
+k1_15=kt
+kt=k1.ix[kt.index-1]
+k1_16=kt
+kt=k1.ix[kt.index-1]
+k1_17=kt
+kt=k1.ix[kt.index-1]
+k1_18=kt
+kt=k1.ix[kt.index-1]
+k1_19=kt
+kt=k1.ix[kt.index-1]
+k1_20=kt
+
+k1_1=k1_1.reset_index(drop = True)
+k1_2=k1_2.reset_index(drop = True)
+k1_3=k1_3.reset_index(drop = True)
+k1_4=k1_4.reset_index(drop = True)
+k1_5=k1_5.reset_index(drop = True)
+k1_6=k1_6.reset_index(drop = True)
+k1_7=k1_7.reset_index(drop = True)
+k1_8=k1_8.reset_index(drop = True)
+k1_9=k1_9.reset_index(drop = True)
+k1_10=k1_10.reset_index(drop = True)
+k1_11=k1_11.reset_index(drop = True)
+k1_12=k1_12.reset_index(drop = True)
+k1_13=k1_13.reset_index(drop = True)
+k1_14=k1_14.reset_index(drop = True)
+k1_15=k1_15.reset_index(drop = True)
+k1_16=k1_16.reset_index(drop = True)
+k1_17=k1_17.reset_index(drop = True)
+k1_18=k1_18.reset_index(drop = True)
+k1_19=k1_19.reset_index(drop = True)
+k1_20=k1_20.reset_index(drop = True)
+
+
+k1_1=k1_0-k1_1
+k1_2=k1_0-k1_2
+k1_3=k1_0-k1_3
+k1_4=k1_0-k1_4
+k1_5=k1_0-k1_5
+k1_6= k1_0-k1_6
+k1_7= k1_0-k1_7
+k1_8= k1_0-k1_8
+k1_9= k1_0-k1_9
+k1_10= k1_0-k1_10
+k1_11= k1_0-k1_11
+k1_12=k1_0-k1_12
+k1_13= k1_0-k1_13
+k1_14= k1_0-k1_14
+k1_15= k1_0-k1_15
+k1_16= k1_0-k1_16
+k1_17= k1_0-k1_17
+k1_18= k1_0-k1_18
+k1_19= k1_0-k1_19
+k1_20= k1_0-k1_20
+
+dt2=pd.DataFrame({'k2_0':k1_0,'k2_1':k1_1,'k2_2':k1_2,'k2_3':k1_3,'k2_4':k1_4,'k2_5':k1_5,
+'k2_6':k1_6,'k2_7':k1_7,'k2_8':k1_8,'k2_9':k1_9,'k2_10':k1_10,
+'k2_11':k1_11,'k2_12':k1_12,'k2_13':k1_13,'k2_14':k1_14,'k2_15':k1_15,
+'k2_16':k1_16,'k2_17':k1_17,'k2_18':k1_18,'k2_19':k1_19,'k2_20':k1_20,
+ })
+
+dt2=dt2.dropna()
+
+
+
+k1=df['k3']
+k1_0=k1
+kt=k1.ix[df.index-1]
+k1_1=kt
+kt=k1.ix[kt.index-1]
+k1_2=kt
+kt=k1.ix[kt.index-1]
+k1_3=kt
+kt=k1.ix[kt.index-1]
+k1_4=kt
+kt=k1.ix[kt.index-1]
+k1_5=kt
+kt=k1.ix[kt.index-1]
+k1_6=kt
+kt=k1.ix[kt.index-1]
+k1_7=kt
+kt=k1.ix[kt.index-1]
+k1_8=kt
+kt=k1.ix[kt.index-1]
+k1_9=kt
+kt=k1.ix[kt.index-1]
+k1_10=kt
+kt=k1.ix[kt.index-1]
+k1_11=kt
+kt=k1.ix[kt.index-1]
+k1_12=kt
+kt=k1.ix[kt.index-1]
+k1_13=kt
+kt=k1.ix[kt.index-1]
+k1_14=kt
+kt=k1.ix[kt.index-1]
+k1_15=kt
+kt=k1.ix[kt.index-1]
+k1_16=kt
+kt=k1.ix[kt.index-1]
+k1_17=kt
+kt=k1.ix[kt.index-1]
+k1_18=kt
+kt=k1.ix[kt.index-1]
+k1_19=kt
+kt=k1.ix[kt.index-1]
+k1_20=kt
+
+k1_1=k1_1.reset_index(drop = True)
+k1_2=k1_2.reset_index(drop = True)
+k1_3=k1_3.reset_index(drop = True)
+k1_4=k1_4.reset_index(drop = True)
+k1_5=k1_5.reset_index(drop = True)
+k1_6=k1_6.reset_index(drop = True)
+k1_7=k1_7.reset_index(drop = True)
+k1_8=k1_8.reset_index(drop = True)
+k1_9=k1_9.reset_index(drop = True)
+k1_10=k1_10.reset_index(drop = True)
+k1_11=k1_11.reset_index(drop = True)
+k1_12=k1_12.reset_index(drop = True)
+k1_13=k1_13.reset_index(drop = True)
+k1_14=k1_14.reset_index(drop = True)
+k1_15=k1_15.reset_index(drop = True)
+k1_16=k1_16.reset_index(drop = True)
+k1_17=k1_17.reset_index(drop = True)
+k1_18=k1_18.reset_index(drop = True)
+k1_19=k1_19.reset_index(drop = True)
+k1_20=k1_20.reset_index(drop = True)
+
+k1_1=k1_0-k1_1
+k1_2=k1_0-k1_2
+k1_3=k1_0-k1_3
+k1_4=k1_0-k1_4
+k1_5=k1_0-k1_5
+k1_6= k1_0-k1_6
+k1_7= k1_0-k1_7
+k1_8= k1_0-k1_8
+k1_9= k1_0-k1_9
+k1_10= k1_0-k1_10
+k1_11= k1_0-k1_11
+k1_12=k1_0-k1_12
+k1_13= k1_0-k1_13
+k1_14= k1_0-k1_14
+k1_15= k1_0-k1_15
+k1_16= k1_0-k1_16
+k1_17= k1_0-k1_17
+k1_18= k1_0-k1_18
+k1_19= k1_0-k1_19
+k1_20= k1_0-k1_20
+
+dt3=pd.DataFrame({'k3_0':k1_0,'k3_1':k1_1,'k3_2':k1_2,'k3_3':k1_3,'k3_4':k1_4,'k3_5':k1_5,
+'k3_6':k1_6,'k3_7':k1_7,'k3_8':k1_8,'k3_9':k1_9,'k3_10':k1_10,
+'k3_11':k1_11,'k3_12':k1_12,'k3_13':k1_13,'k3_14':k1_14,'k3_15':k1_15,
+'k3_16':k1_16,'k3_17':k1_17,'k3_18':k1_18,'k3_19':k1_19,'k3_20':k1_20,
+ })
+
+dt3=dt3.dropna()
+
+
+
+
+k1=df['k4']
+k1_0=k1
+kt=k1.ix[df.index-1]
+k1_1=kt
+kt=k1.ix[kt.index-1]
+k1_2=kt
+kt=k1.ix[kt.index-1]
+k1_3=kt
+kt=k1.ix[kt.index-1]
+k1_4=kt
+kt=k1.ix[kt.index-1]
+k1_5=kt
+kt=k1.ix[kt.index-1]
+k1_6=kt
+kt=k1.ix[kt.index-1]
+k1_7=kt
+kt=k1.ix[kt.index-1]
+k1_8=kt
+kt=k1.ix[kt.index-1]
+k1_9=kt
+kt=k1.ix[kt.index-1]
+k1_10=kt
+kt=k1.ix[kt.index-1]
+k1_11=kt
+kt=k1.ix[kt.index-1]
+k1_12=kt
+kt=k1.ix[kt.index-1]
+k1_13=kt
+kt=k1.ix[kt.index-1]
+k1_14=kt
+kt=k1.ix[kt.index-1]
+k1_15=kt
+kt=k1.ix[kt.index-1]
+k1_16=kt
+kt=k1.ix[kt.index-1]
+k1_17=kt
+kt=k1.ix[kt.index-1]
+k1_18=kt
+kt=k1.ix[kt.index-1]
+k1_19=kt
+kt=k1.ix[kt.index-1]
+k1_20=kt
+
+k1_1=k1_1.reset_index(drop = True)
+k1_2=k1_2.reset_index(drop = True)
+k1_3=k1_3.reset_index(drop = True)
+k1_4=k1_4.reset_index(drop = True)
+k1_5=k1_5.reset_index(drop = True)
+k1_6=k1_6.reset_index(drop = True)
+k1_7=k1_7.reset_index(drop = True)
+k1_8=k1_8.reset_index(drop = True)
+k1_9=k1_9.reset_index(drop = True)
+k1_10=k1_10.reset_index(drop = True)
+k1_11=k1_11.reset_index(drop = True)
+k1_12=k1_12.reset_index(drop = True)
+k1_13=k1_13.reset_index(drop = True)
+k1_14=k1_14.reset_index(drop = True)
+k1_15=k1_15.reset_index(drop = True)
+k1_16=k1_16.reset_index(drop = True)
+k1_17=k1_17.reset_index(drop = True)
+k1_18=k1_18.reset_index(drop = True)
+k1_19=k1_19.reset_index(drop = True)
+k1_20=k1_20.reset_index(drop = True)
+
+k1_1=k1_0-k1_1
+k1_2=k1_0-k1_2
+k1_3=k1_0-k1_3
+k1_4=k1_0-k1_4
+k1_5=k1_0-k1_5
+k1_6= k1_0-k1_6
+k1_7= k1_0-k1_7
+k1_8= k1_0-k1_8
+k1_9= k1_0-k1_9
+k1_10= k1_0-k1_10
+k1_11= k1_0-k1_11
+k1_12=k1_0-k1_12
+k1_13= k1_0-k1_13
+k1_14= k1_0-k1_14
+k1_15= k1_0-k1_15
+k1_16= k1_0-k1_16
+k1_17= k1_0-k1_17
+k1_18= k1_0-k1_18
+k1_19= k1_0-k1_19
+k1_20= k1_0-k1_20
+
+dt4=pd.DataFrame({'k4_0':k1_0,'k4_1':k1_1,'k4_2':k1_2,'k4_3':k1_3,'k4_4':k1_4,'k4_5':k1_5,
+'k4_6':k1_6,'k4_7':k1_7,'k4_8':k1_8,'k4_9':k1_9,'k4_10':k1_10,
+'k4_11':k1_11,'k4_12':k1_12,'k4_13':k1_13,'k4_14':k1_14,'k4_15':k1_15,
+'k4_16':k1_16,'k4_17':k1_17,'k4_18':k1_18,'k4_19':k1_19,'k4_20':k1_20,
+ })
+
+dt4=dt4.dropna()
+
+
+k1=df['k5']
+k1_0=k1
+kt=k1.ix[df.index-1]
+k1_1=kt
+kt=k1.ix[kt.index-1]
+k1_2=kt
+kt=k1.ix[kt.index-1]
+k1_3=kt
+kt=k1.ix[kt.index-1]
+k1_4=kt
+kt=k1.ix[kt.index-1]
+k1_5=kt
+kt=k1.ix[kt.index-1]
+k1_6=kt
+kt=k1.ix[kt.index-1]
+k1_7=kt
+kt=k1.ix[kt.index-1]
+k1_8=kt
+kt=k1.ix[kt.index-1]
+k1_9=kt
+kt=k1.ix[kt.index-1]
+k1_10=kt
+kt=k1.ix[kt.index-1]
+k1_11=kt
+kt=k1.ix[kt.index-1]
+k1_12=kt
+kt=k1.ix[kt.index-1]
+k1_13=kt
+kt=k1.ix[kt.index-1]
+k1_14=kt
+kt=k1.ix[kt.index-1]
+k1_15=kt
+kt=k1.ix[kt.index-1]
+k1_16=kt
+kt=k1.ix[kt.index-1]
+k1_17=kt
+kt=k1.ix[kt.index-1]
+k1_18=kt
+kt=k1.ix[kt.index-1]
+k1_19=kt
+kt=k1.ix[kt.index-1]
+k1_20=kt
+
+k1_1=k1_1.reset_index(drop = True)
+k1_2=k1_2.reset_index(drop = True)
+k1_3=k1_3.reset_index(drop = True)
+k1_4=k1_4.reset_index(drop = True)
+k1_5=k1_5.reset_index(drop = True)
+k1_6=k1_6.reset_index(drop = True)
+k1_7=k1_7.reset_index(drop = True)
+k1_8=k1_8.reset_index(drop = True)
+k1_9=k1_9.reset_index(drop = True)
+k1_10=k1_10.reset_index(drop = True)
+k1_11=k1_11.reset_index(drop = True)
+k1_12=k1_12.reset_index(drop = True)
+k1_13=k1_13.reset_index(drop = True)
+k1_14=k1_14.reset_index(drop = True)
+k1_15=k1_15.reset_index(drop = True)
+k1_16=k1_16.reset_index(drop = True)
+k1_17=k1_17.reset_index(drop = True)
+k1_18=k1_18.reset_index(drop = True)
+k1_19=k1_19.reset_index(drop = True)
+k1_20=k1_20.reset_index(drop = True)
+
+k1_1=k1_0-k1_1
+k1_2=k1_0-k1_2
+k1_3=k1_0-k1_3
+k1_4=k1_0-k1_4
+k1_5=k1_0-k1_5
+k1_6= k1_0-k1_6
+k1_7= k1_0-k1_7
+k1_8= k1_0-k1_8
+k1_9= k1_0-k1_9
+k1_10= k1_0-k1_10
+k1_11= k1_0-k1_11
+k1_12=k1_0-k1_12
+k1_13= k1_0-k1_13
+k1_14= k1_0-k1_14
+k1_15= k1_0-k1_15
+k1_16= k1_0-k1_16
+k1_17= k1_0-k1_17
+k1_18= k1_0-k1_18
+k1_19= k1_0-k1_19
+k1_20= k1_0-k1_20
+
+dt5=pd.DataFrame({'k5_0':k1_0,'k5_1':k1_1,'k5_2':k1_2,'k5_3':k1_3,'k5_4':k1_4,'k5_5':k1_5,
+'k5_6':k1_6,'k5_7':k1_7,'k5_8':k1_8,'k5_9':k1_9,'k5_10':k1_10,
+'k5_11':k1_11,'k5_12':k1_12,'k5_13':k1_13,'k5_14':k1_14,'k5_15':k1_15,
+'k5_16':k1_16,'k5_17':k1_17,'k5_18':k1_18,'k5_19':k1_19,'k5_20':k1_20,
+ })
+
+dt5=dt3.dropna()
+
+
+
+
+
+k1=df['k6']
+k1_0=k1
+kt=k1.ix[df.index-1]
+k1_1=kt
+kt=k1.ix[kt.index-1]
+k1_2=kt
+kt=k1.ix[kt.index-1]
+k1_3=kt
+kt=k1.ix[kt.index-1]
+k1_4=kt
+kt=k1.ix[kt.index-1]
+k1_5=kt
+kt=k1.ix[kt.index-1]
+k1_6=kt
+kt=k1.ix[kt.index-1]
+k1_7=kt
+kt=k1.ix[kt.index-1]
+k1_8=kt
+kt=k1.ix[kt.index-1]
+k1_9=kt
+kt=k1.ix[kt.index-1]
+k1_10=kt
+kt=k1.ix[kt.index-1]
+k1_11=kt
+kt=k1.ix[kt.index-1]
+k1_12=kt
+kt=k1.ix[kt.index-1]
+k1_13=kt
+kt=k1.ix[kt.index-1]
+k1_14=kt
+kt=k1.ix[kt.index-1]
+k1_15=kt
+kt=k1.ix[kt.index-1]
+k1_16=kt
+kt=k1.ix[kt.index-1]
+k1_17=kt
+kt=k1.ix[kt.index-1]
+k1_18=kt
+kt=k1.ix[kt.index-1]
+k1_19=kt
+kt=k1.ix[kt.index-1]
+k1_20=kt
+
+k1_1=k1_1.reset_index(drop = True)
+k1_2=k1_2.reset_index(drop = True)
+k1_3=k1_3.reset_index(drop = True)
+k1_4=k1_4.reset_index(drop = True)
+k1_5=k1_5.reset_index(drop = True)
+k1_6=k1_6.reset_index(drop = True)
+k1_7=k1_7.reset_index(drop = True)
+k1_8=k1_8.reset_index(drop = True)
+k1_9=k1_9.reset_index(drop = True)
+k1_10=k1_10.reset_index(drop = True)
+k1_11=k1_11.reset_index(drop = True)
+k1_12=k1_12.reset_index(drop = True)
+k1_13=k1_13.reset_index(drop = True)
+k1_14=k1_14.reset_index(drop = True)
+k1_15=k1_15.reset_index(drop = True)
+k1_16=k1_16.reset_index(drop = True)
+k1_17=k1_17.reset_index(drop = True)
+k1_18=k1_18.reset_index(drop = True)
+k1_19=k1_19.reset_index(drop = True)
+k1_20=k1_20.reset_index(drop = True)
+
+k1_1=k1_0-k1_1
+k1_2=k1_0-k1_2
+k1_3=k1_0-k1_3
+k1_4=k1_0-k1_4
+k1_5=k1_0-k1_5
+k1_6= k1_0-k1_6
+k1_7= k1_0-k1_7
+k1_8= k1_0-k1_8
+k1_9= k1_0-k1_9
+k1_10= k1_0-k1_10
+k1_11= k1_0-k1_11
+k1_12=k1_0-k1_12
+k1_13= k1_0-k1_13
+k1_14= k1_0-k1_14
+k1_15= k1_0-k1_15
+k1_16= k1_0-k1_16
+k1_17= k1_0-k1_17
+k1_18= k1_0-k1_18
+k1_19= k1_0-k1_19
+k1_20= k1_0-k1_20
+
+dt6=pd.DataFrame({'k6_0':k1_0,'k6_1':k1_1,'k6_2':k1_2,'k6_3':k1_3,'k6_4':k1_4,'k6_5':k1_5,
+'k6_6':k1_6,'k6_7':k1_7,'k6_8':k1_8,'k1_9':k1_9,'k6_10':k1_10,
+'k6_11':k1_11,'k6_12':k1_12,'k6_13':k1_13,'k6_14':k1_14,'k6_15':k1_15,
+'k6_16':k1_16,'k6_17':k1_17,'k6_18':k1_18,'k6_19':k1_19,'k6_20':k1_20,
+ })
+
+dt6=dt6.dropna()
+
+dx=df.loc[20:df.shape[0]]
+
+dx['er']=dx['pred']-dx['real']
+
+
+#dfile=pd.concat([dt,dt2,dt3,dt4,dt5,dt6,dx['pred'],dx['real'],dx['er']], axis=1, join='inner')
+#dfile.to_csv('60-20lag.csv')
+ddf=pd.concat([dt,dt2,dt3,dt4,dt5,dt6,dx['pred'],dx['real'],dx['er']], axis=1, join='inner')
+
+
+a= abs(np.array(ddf['k1_1']))
+print(np.percentile(a, 80, axis=0))
+print(np.percentile(a, 85, axis=0))
+print(np.percentile(a, 90, axis=0))
+print(np.percentile(a, 96, axis=0))
+print(np.percentile(a, 99, axis=0))
+
+b= abs(np.array(ddf['k3_2']))
+print(np.percentile(b, 80, axis=0))
+print(np.percentile(b, 85, axis=0))
+print(np.percentile(b, 90, axis=0))
+print(np.percentile(b, 95, axis=0))
+
+b= abs(np.array(dx['er']))
+print(np.percentile(b, 80, axis=0))
+print(np.percentile(b, 85, axis=0))
+print(np.percentile(b, 90, axis=0))
+print(np.percentile(b, 95, axis=0))
+
+
+#d1=ddf.ix[abs(ddf['k1_1'])>3.5,:]
+d1=ddf.ix[(abs(ddf['k1_1'])>3.5)|(abs(ddf['k3_1'])>90),:]
+d2=d1.corrwith(d1['er'])
+d3=d1.corrwith(d1['real'])
+d4=d1.corrwith(d1['pred'])
+ff=pd.concat([d2,d3,d4], axis=1, join='inner')
+ff.to_csv('static4.csv')
+d1.to_csv('exwswr.csv')
+
+#ddf.describe().to_csv('static.csv')
+y_train=dx['er'].ix[list(range(20,4300))]
+X_train=ddf.ix[list(range(20,4300))]
+
+
+y_real=dx.ix[list(range(4300,8740)),'real']
+X_test=ddf.ix[list(range(4300,8740))]
+y_test=y_real
+
+#ddf.to_csv('60-20lag.csv')
+#np.isnan(y_train).sum()
+"""
+plt.figure()
+from sklearn.svm import SVR
+from sklearn.model_selection import cross_val_score
+
+max_features = [.000001,.000002,.000003,.000004,.000005,.00001,.0001]
+test_scores = []
+for i in max_features:
+	svr = SVR(kernel='rbf', C=1e1, gamma=i)
+	scores = cross_val_score(svr, X_train,y_train, cv=5)
+	test_scores.append(np.mean(scores))
+plt.plot(max_features, test_scores)
+plt.title("gamma vs CV Error");
+plt.show()
+
+
+
+from sklearn.svm import SVR
+svr_rbf=SVR(kernel='rbf',C=1,gamma=.000001)
+y_rbf=svr_rbf.fit(X_train,y_train).predict(X_test)
+
+
+
+pred_new=y_pred-y_rbf
+error1 = mean_squared_error(y_real/1000, y_pred/1000,)**0.5 #get the RMSE
+error2 = mean_squared_error(y_real/1000, pred_new/1000)**0.5 #get the RMSE
+#error3 = mean_squared_error(y_real/1000, pred_y_lin/1000)**0.5 #get the RMSE
+#error4 = mean_squared_error(y_real/1000, pred_y_poly/1000)**0.5 #get the RMSE
+
+print('AR RMSE: %.9f' % error1)
+print('AR+SVR RMSE: %.9f' % error2)
+#print('AR+y_lin RMSE: %.9f' % error3)
+#print('AR+y_poly RMSE: %.9f' % error4)
+"""
+
+alpha = 0.95
+
+y_pred=dx.ix[list(range(4300,8740)),'pred']
+from sklearn.ensemble import GradientBoostingRegressor as GBR
+gbr = GBR()
+"""
+gbr = GBR(loss='ls', alpha=alpha,
+                n_estimators=200, max_depth=5,
+                learning_rate=.01, min_samples_leaf=9,
+                min_samples_split=9)
+"""
+gbr.fit(X_train, y_train)
+y_gbr = gbr.predict(X_test)
+pred_new=y_pred-y_gbr
+
+error11 = mean_squared_error(y_real/1000, y_pred/1000,)**0.5 #get the RMSE
+error22 = mean_squared_error(y_real/1000, pred_new/1000)**0.5 #get the RMSE
+
+print('AR RMSE: %.9f' % error11)
+print('AR+GBR RMSE: %.9f' % error22)
+
+"""
+
+d1=ddf.corrwith(ddf['er'])
+d2=ddf.corrwith(ddf['pred'])
+d3=ddf.corrwith(ddf['real'])
+dc=pd.concat([d1,d2,d3], axis=1, join='inner')
+
+
+#dx=df.loc[5:df.shape[0]]
+dx=df.loc[10:df.shape[0]]
+dx=dx.reset_index(drop = True)
+
+er=(dx['pred']-dx['real'])
+
+train_df=ddf.ix[list(range(0,8760)),list(range(0,36))]
+test_df=ddf.ix[list(range(8760,17510)),list(range(0,36))]
+
+
+
+y_train=er.ix[list(range(0,8760))]
+y_pred=dx.ix[list(range(8760,17510)),'pred']
+y_real=dx.ix[list(range(8760,17510)),'real']
+"""
+"""
+train_df=ddf.ix[list(range(8760,17510)),list(range(0,36))]
+test_df=ddf.ix[list(range(0,8760)),list(range(0,36))]
+
+
+
+y_train=er.ix[list(range(8760,17510))]
+y_pred=dx.ix[list(range(0,8760)),'pred']
+y_real=dx.ix[list(range(0,8760)),'real']
+"""
+"""
+X_train = train_df
+X_test=test_df
+
+from sklearn.svm import SVR
+
+svr_rbf=SVR(kernel='rbf',C=1e3,gamma=0.1)
+svr_lin=SVR(kernel='linear',C=1e3)
+svr_poly=SVR(kernel='poly',C=1e3,degree=2)
+
+
+y_rbf=svr_rbf.fit(X_train,y_train).predict(X_test)
+#y_lin=svr_lin.fit(X_train,y_train).predict(X_test)
+#y_poly=svr_poly.fit(X_train,y_train).predict(X_test)
+
+
+pred_new=y_pred-y_rbf
+#pred_y_lin=y_lin+y_pred
+#pred_y_poly=y_poly+y_pred
+
+
+
+error1 = mean_squared_error(y_real/1000, y_pred/1000,)**0.5 #get the RMSE
+error2 = mean_squared_error(y_real/1000, pred_new/1000)**0.5 #get the RMSE
+#error3 = mean_squared_error(y_real/1000, pred_y_lin/1000)**0.5 #get the RMSE
+#error4 = mean_squared_error(y_real/1000, pred_y_poly/1000)**0.5 #get the RMSE
+
+print('AR RMSE: %.9f' % error1)
+print('AR+RFR RMSE: %.9f' % error2)
+#print('AR+y_lin RMSE: %.9f' % error3)
+#print('AR+y_poly RMSE: %.9f' % error4)
+
+from sklearn.ensemble import GradientBoostingRegressor as GBR
+gbr = GBR()
+gbr.fit(X_train, y_train)
+y_gbr = gbr.predict(X_test)
+pred_new=y_pred-y_gbr
+
+error11 = mean_squared_error(y_real/1000, y_pred/1000,)**0.5 #get the RMSE
+error22 = mean_squared_error(y_real/1000, pred_new/1000)**0.5 #get the RMSE
+
+print('AR RMSE: %.9f' % error11)
+print('AR+GBR RMSE: %.9f' % error22)
+"""
