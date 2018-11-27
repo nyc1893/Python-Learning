@@ -1,0 +1,166 @@
+"""
+this file contain a self designed wnn activation function, which refer to the paper 
+of 'Wavelet Neural Network Using Multiple Wavelet Functions in Target Threat Assessment'
+Page 5 Morlet wavelet function (14)
+The goal for the WNN is to predict the wind power, by training the 1st year data and test 
+the 2nd year data for prediction
+"""
+import numpy as np
+import tensorflow as tf
+import pandas as pd
+import os 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
+"""
+X_train = np.linspace(-1,1,300,dtype=np.float32)[:,np.newaxis]
+noise = np.random.normal(0,0.05,X_train.shape).astype(np.float32)
+y_train = np.square(X_train)-0.5 + noise
+
+
+
+X_test = np.linspace(-1,1,300,dtype=np.float32)[:,np.newaxis]
+y_test = np.square(X_test)-0.5 + noise
+
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import pyplot as plt
+plt.savefig(file_path)
+WSL 中保存图片
+"""
+
+dge_2009=pd.read_csv('ge_2009.csv')
+dge_2009.isnull().sum()
+dge_2010=pd.read_csv('ge_2010.csv')
+dge_2010.isnull().sum()
+
+
+
+X_train = dge_2009.ix[dge_2009.index,list(range(1,8))]
+#X_train.head()
+y_train = dge_2009.ix[dge_2009.index,['l0']]
+#X_train.dtypes
+X_test = dge_2010.ix[dge_2010.index,list(range(1,8))]
+y_test = dge_2010.ix[dge_2010.index,['l0']]
+"""
+C = tf.Variable(tf.random_normal([1,7]))
+A = tf.Variable(tf.random_normal([1,7]))
+B = tf.cast(tf.Variable(tf.zeros([7,7])+0.1),tf.float32)
+
+print(tf.pow(C,2).shape)
+print(tf.div((C-A),B).shape)
+D = tf.exp((-0.5*tf.pow(tf.div((C-A),B),2)))
+
+E = tf.math.cos((1.75*tf.div((C-A),B)))
+print(tf.matmul(D,E).shape)
+#print(tf.matmul(tf.cast(-0.5,tf.float32),tf.cast(tf.pow(X_train,2),tf.float32)).shape)
+"""
+
+
+
+x_val_train = X_train 
+x_val_test = X_test
+y_val_train = y_train 
+y_val_test = y_test
+
+x_data = tf.placeholder(dtype = tf.float32)
+y_target = tf.placeholder(dtype = tf.float32) #Figure out usage of None
+
+
+
+
+def wnn_layer(inputs,in_size,out_size,activation_function =None):
+	A = tf.Variable(tf.random_normal([1,in_size]))
+	B = tf.Variable(tf.zeros([1,in_size])+0.1)
+	
+	#math.cos(1.75*x)*np.exp(-0.5*x*x)
+	D = tf.exp((-0.5*tf.pow(tf.div((inputs-A),B),2)))
+	E = tf.math.cos((1.75*tf.div((inputs-A),B)))
+	b = tf.multiply(D,E)
+	#Wx_plus_b = tf.matmul(a,b)   
+	print(b.shape)
+	if activation_function is None:
+		outputs = b
+	else:
+		outputs = activation_function(Wx_plus_b)
+	return outputs
+
+def add_layer(inputs,in_size,out_size,activation_function =None):
+	Weights = tf.Variable(tf.random_normal([in_size,out_size]))
+	biases = tf.Variable(tf.zeros([1,out_size])+0.1)
+	Wx_plus_b = tf.matmul(inputs, Weights)+biases
+	if activation_function is None:
+		outputs = Wx_plus_b 
+	else:
+		outputs = activation_function(Wx_plus_b)
+	return outputs
+	
+def merge_layer(inputs1,inputs2,in_size1,in_size2,out_size,activation_function =None):
+	W1 = tf.Variable(tf.random_normal([in_size1,out_size]))
+	W2 = tf.Variable(tf.random_normal([in_size2,out_size]))
+	biases = tf.Variable(tf.random_normal([1,out_size]))
+	Wx_plus_b = tf.matmul(inputs1, W1)+ tf.matmul(inputs2, W2) + biases
+	if activation_function is None:
+		outputs = Wx_plus_b 
+	else:
+		outputs = activation_function(Wx_plus_b)
+	return outputs	
+	
+#Parameter for NN
+hidden_layer_size = 64
+
+
+
+#Generation of model
+hidden_output = wnn_layer(x_data,7,hidden_layer_size,activation_function = None)
+hidden_output3 = add_layer(hidden_output,7,hidden_layer_size,activation_function = tf.nn.relu)
+hidden_output2 = add_layer(x_data,7,hidden_layer_size,activation_function = tf.nn.relu)
+final_output = merge_layer(hidden_output3,hidden_output2,hidden_layer_size,hidden_layer_size,1,activation_function = None)
+
+
+
+loss = tf.reduce_mean(tf.square(y_target - final_output))
+
+learning_rate = 0.001
+train = tf.train.AdamOptimizer (learning_rate).minimize(loss)
+
+init = tf.global_variables_initializer()
+sess = tf.Session()
+sess.run(init)
+
+#Training Loop
+
+loss_vec = []
+test_loss = []
+epoch = 20000
+batch_size = 100
+
+
+def oneTrainingSession(epoch,loss_vec,test_loss,batch_size) :
+    rand_index = np.random.choice(len(x_val_train), size = batch_size)
+
+    rand_x = x_val_train #[rand_index,:]
+    rand_y = y_val_train #[rand_index,:]
+
+    temp_loss,_ = sess.run([loss,train], feed_dict = {x_data: rand_x, y_target : rand_y})
+    loss_vec.append(np.sqrt(temp_loss))
+
+    test_temp_loss = sess.run(loss, feed_dict = {x_data : x_val_test, y_target : y_val_test})
+    test_loss.append(np.sqrt(test_temp_loss))
+
+    if (i+1)%500 == 0:
+        print('Generation: ' + str(i+1) + '.loss = ' + str(temp_loss))
+
+for i in range(epoch):
+    oneTrainingSession(epoch,loss_vec,test_loss,batch_size)
+
+test = x_val_test
+#print ("The test values are")
+#print (test)
+print ("")
+pred_y = sess.run(final_output, feed_dict = {x_data : test})
+mse = tf.reduce_mean(tf.square(pred_y - y_test)) 
+rmse = tf.sqrt(tf.reduce_mean(tf.square(pred_y - y_test)) )
+print("MSE: %.4f" % sess.run(mse))
+print("RMSE: %.4f" % sess.run(rmse))
+"""
+"""
