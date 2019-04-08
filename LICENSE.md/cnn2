@@ -1,0 +1,159 @@
+import numpy as np
+import pandas as pd
+from math import sqrt
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_absolute_error
+
+np.random.seed(1337)  # for reproducibility
+
+from keras.utils import np_utils
+from keras.models import Sequential
+from keras.layers import Dense, Activation, Convolution2D, MaxPooling2D, Flatten
+from keras.optimizers import Adam
+
+dge_2009=pd.read_csv('C:\\360Downloads\\data\\correct\\GE_kW_2009.csv')
+dge_2010=pd.read_csv('C:\\360Downloads\\data\\correct\\GE_kW_2010.csv')
+dmit_2009=pd.read_csv('C:\\360Downloads\\data\\correct\\Mits_kW_2009.csv')
+dmit_2010=pd.read_csv('C:\\360Downloads\\data\\correct\\Mits_kW_2010.csv')
+tol_2009 =pd.read_csv('df_2009.csv')
+tol_2010 =pd.read_csv('df_2010.csv')
+
+tol_2009[tol_2009<0] = np.nan
+tol_2009=tol_2009.fillna(0)
+
+tol_2009['Total']= tol_2009.apply(lambda x: x.sum(), axis=1)
+
+tol_2010[tol_2010<0] = np.nan
+tol_2010=tol_2010.fillna(0)
+tol_2010['Total']= tol_2010.apply(lambda x: x.sum(), axis=1)
+
+"""
+df_2009 = dge_2009.join(dmit_2009)
+df_2009[df_2009<0] = np.nan
+df_2009=df_2009.fillna(0)
+
+df_2010 = dge_2010.join(dmit_2010)
+df_2010[df_2010<0] = np.nan
+df_2010=df_2010.fillna(0)
+"""
+
+# df_2009.to_csv('df_2009.csv')
+# df_2010.to_csv('df_2010.csv')
+
+tol_2009['b']=tol_2009['Total'].shift(1)
+tol_2009['c']=(tol_2009['b']-tol_2009['Total'])/300500
+
+
+tol_2010['b']=tol_2010['Total'].shift(1)
+tol_2010['c']=(tol_2010['b']-tol_2010['Total'])/300500
+
+bins = [
+-1000,
+-0.05,
+-0.02,
+0.02,
+0.05,
+1000 
+]
+
+gn = [1,2,3,4,5]
+
+tol_2009['d']=pd.cut(tol_2009['c'],bins,labels=gn)
+tol_2009['d']=tol_2009['d'].fillna(3)
+# print(tol_2009.groupby('d').count())
+
+tol_2010['d']=pd.cut(tol_2010['c'],bins,labels=gn)
+tol_2010['d']=tol_2010['d'].fillna(3)
+# print(tol_2010.head(50))
+# print(tol_2010.groupby('d').count())
+
+# tol_2010['d'] = tol_2010['d'].astype('int')
+# tol_2009['d'] = tol_2009['d'].astype('int')
+
+X_train = tol_2009.ix[tol_2009.index,list(range(0,272))].values
+print(X_train.shape)
+X_train = X_train.reshape(-1, 1,16, 17)
+print(X_train.shape)
+
+
+X_test=tol_2010.ix[tol_2010.index,list(range(0,272))].values
+# print(tol_2010['d'].count)
+
+print(X_test.shape)
+X_test = X_test.reshape(-1, 1,16, 17)
+print(X_test.shape)
+
+
+
+
+y_train= tol_2009['d'].values
+y_test = tol_2010['d'].values
+print(y_train.shape)
+print(y_test.shape)
+
+# print(tol_2010.groupby('d').count())
+# print(tol_2009.groupby('d').count())
+
+y_train = np_utils.to_categorical(y_train, num_classes=6)
+y_test = np_utils.to_categorical(y_test, num_classes=6)
+print(y_train.shape)
+print(y_test.shape)
+
+
+
+# Another way to build your CNN
+model = Sequential()
+
+# Conv layer 1 output shape (32, 16, 17)
+model.add(Convolution2D(
+    batch_input_shape=(None, 1, 16, 17),
+    filters=32,
+    kernel_size=5,
+    strides=1,
+    padding='same',     # Padding method
+    data_format='channels_first',
+))
+model.add(Activation('relu'))
+
+# Pooling layer 1 (max pooling) output shape (32, 8, 9)
+model.add(MaxPooling2D(
+    pool_size=2,
+    strides=2,
+    padding='same',    # Padding method
+    data_format='channels_first',
+))
+
+# Conv layer 2 output shape (64, 8, 9)
+model.add(Convolution2D(64, 5, strides=1, padding='same', data_format='channels_first'))
+model.add(Activation('relu'))
+
+# Pooling layer 2 (max pooling) output shape (64, 4, 5)
+model.add(MaxPooling2D(2, 2, 'same', data_format='channels_first'))
+
+# Fully connected layer 1 input shape (64 * 4 * 5) = (1280), output shape (1024)
+model.add(Flatten())
+model.add(Dense(256))
+model.add(Activation('relu'))
+
+# Fully connected layer 2 to shape (10) for 10 classes
+model.add(Dense(6))
+model.add(Activation('softmax'))
+
+# Another way to define your optimizer
+adam = Adam(lr=1e-4)
+
+# We add metrics to get more results you want to see
+model.compile(optimizer=adam,
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
+
+print('Training ------------')
+# Another way to train the model
+model.fit(X_train, y_train, epochs=1, batch_size=64,)
+
+print('\nTesting ------------')
+# Evaluate the model with the metrics we defined earlier
+loss, accuracy = model.evaluate(X_test, y_test)
+
+print('\ntest loss: ', loss)
+print('\ntest accuracy: ', accuracy)
