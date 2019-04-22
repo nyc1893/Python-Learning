@@ -4,3 +4,7 @@ python -m pip install -U Theano(Package name)
 
 Enter the py_ile in ubuntu sys
 cd /mnt/c/work/py_file
+
+
+In win10 cmd platform, the package is installed in here:
+C:\Users\yunchuanl\AppData\Local\Continuum\anaconda3\Lib\site-packages\neat
