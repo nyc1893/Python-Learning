@@ -1,0 +1,15 @@
+from google.colab import files
+import numpy as np
+import pandas as pd
+
+uploaded = files.upload()
+
+for fn in uploaded.keys():
+  print('User uploaded file "{name}" with length {length} bytes'.format(
+      name=fn, length=len(uploaded[fn])))
+  
+tr = pd.read_csv('ppge12_2009.csv')
+tr['dd'].to_csv("ck.csv")
+
+
+files.download('ck.csv')
