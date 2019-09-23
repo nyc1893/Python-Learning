@@ -1,0 +1,154 @@
+"""
+prepare for the ramp detection
+classify to 4 classes:
+1,2 greater than 10% overall,class 3 means swing greater than 10%
+4 means normal event
+"""
+import  pandas as pd
+import  numpy as np
+import timeit
+
+
+dge_2009=pd.read_csv('C:\\360Downloads\\data\\correct\\GE_kW_2009.csv')
+dge_2010=pd.read_csv('C:\\360Downloads\\data\\correct\\GE_kW_2010.csv')
+dmit_2009=pd.read_csv('C:\\360Downloads\\data\\correct\\Mits_kW_2009.csv')
+dmit_2010=pd.read_csv('C:\\360Downloads\\data\\correct\\Mits_kW_2010.csv')
+dge_2008=pd.read_csv('C:\\360Downloads\\data\\2008-2010\\whole\\GE_kW_2008.csv')
+dmit_2008=pd.read_csv('C:\\360Downloads\\data\\2008-2010\\whole\\Mits_kW_2008.csv')
+
+s1 = timeit.default_timer() 
+
+dge_2008[dge_2008<0] = np.nan
+dge_2008=dge_2008.fillna(0)
+dge_2008['Total']= dge_2008.apply(lambda x: x.sum(), axis=1)
+# print(dge_2009.head())
+
+
+dmit_2008[dmit_2008<0] = np.nan
+dmit_2008=dmit_2008.fillna(0)
+dmit_2008['Total']= dmit_2008.apply(lambda x: x.sum(), axis=1)
+dmit_2008['2Total'] =  dmit_2008['Total']+dmit_2008['Total']
+
+
+dge_2009[dge_2009<0] = np.nan
+dge_2009=dge_2009.fillna(0)
+dge_2009['Total']= dge_2009.apply(lambda x: x.sum(), axis=1)
+# print(dge_2009.head())
+
+
+dmit_2009[dmit_2009<0] = np.nan
+dmit_2009=dmit_2009.fillna(0)
+dmit_2009['Total']= dmit_2009.apply(lambda x: x.sum(), axis=1)
+dmit_2009['2Total'] =  dge_2009['Total']+dmit_2009['Total']
+# print(dmit_2009.head(20))
+
+
+dge_2010[dge_2010<0] = np.nan
+dge_2010=dge_2010.fillna(0)
+dge_2010['Total']= dge_2010.apply(lambda x: x.sum(), axis=1)
+
+dmit_2010[dmit_2010<0] = np.nan
+dmit_2010=dmit_2010.fillna(0)
+dmit_2010['Total']= dmit_2010.apply(lambda x: x.sum(), axis=1)
+
+dmit_2010['2Total'] =  dge_2010['Total']+dmit_2010['Total']
+# print(dmit_2009.head(20))
+
+
+df2 = dmit_2008['2Total'].values/1000
+
+df = dmit_2009['2Total'].values/1000
+# print(df.shape[0])
+lag = 6
+
+print(df[0:5])
+print(df.shape[0])
+for i in range(1,lag+1):
+    df = np.append(df2[df2.shape[0]-i], df)
+# print(df[0:5+lag])
+# print(df.shape[0])
+ 
+
+# df.shape[0]
+X_train = []
+# print(df)
+# print(df[0:5])
+
+
+for i in range(lag, df.shape[0]):
+    X_train.append(df[i-lag:i])
+X_train = pd.DataFrame(X_train)
+# print(X_train)
+
+X_train['c'] = X_train.apply(lambda s:max(s[0:lag])-min(s[0:lag]), axis=1)
+X_train['d'] = X_train.apply(lambda s:s[lag-1]-s[0], axis=1)
+
+X_train['d1'] = np.where(X_train.d >= 30, 1, 0)
+X_train['d2'] = np.where(X_train.d <= -30, 1, 0)
+X_train['d3'] = np.where(X_train.c >= 30, 1, 0)
+X_train['d4'] = np.where((X_train.d3 == 1)&((X_train.d1!= 1)&(X_train.d2!= 1)), 1, 0)
+X_train['d5'] = np.where((X_train.d4 == 0)&(X_train.d1== 0)&(X_train.d2== 0), 1, 0)
+
+X_train.loc[X_train.d1 ==1,'dd']= 1
+X_train.loc[X_train.d2 ==1,'dd']= 2
+X_train.loc[X_train.d4 ==1,'dd']= 3
+X_train.loc[X_train.d5 ==1,'dd']= 4
+
+print(X_train.head())
+print(X_train['d1'].value_counts())
+print(X_train['d2'].value_counts())
+print(X_train['d3'].value_counts())
+print(X_train['d4'].value_counts())
+print(X_train['d5'].value_counts())
+
+X_train[['dd']].to_csv('dclass_2009.csv')
+
+
+df2 = dmit_2009['2Total'].values/1000
+
+df = dmit_2010['2Total'].values/1000
+
+
+
+print(df[0:5])
+print(df.shape[0])
+for i in range(1,lag+1):
+    df = np.append(df2[df2.shape[0]-i], df)
+# print(df[0:5+lag])
+# print(df.shape[0])
+ 
+
+# df.shape[0]
+X_train = []
+# print(df)
+# print(df[0:5])
+
+
+for i in range(lag, df.shape[0]):
+    X_train.append(df[i-lag:i])
+X_train = pd.DataFrame(X_train)
+# print(X_train)
+
+X_train['c'] = X_train.apply(lambda s:max(s[0:lag])-min(s[0:lag]), axis=1)
+X_train['d'] = X_train.apply(lambda s:s[lag-1]-s[0], axis=1)
+
+X_train['d1'] = np.where(X_train.d >= 30, 1, 0)
+X_train['d2'] = np.where(X_train.d <= -30, 1, 0)
+X_train['d3'] = np.where(X_train.c >= 30, 1, 0)
+X_train['d4'] = np.where((X_train.d3 == 1)&((X_train.d1!= 1)&(X_train.d2!= 1)), 1, 0)
+X_train['d5'] = np.where((X_train.d4 == 0)&(X_train.d1== 0)&(X_train.d2== 0), 1, 0)
+print(X_train.head())
+print(X_train['d1'].value_counts())
+print(X_train['d2'].value_counts())
+print(X_train['d3'].value_counts())
+print(X_train['d4'].value_counts())
+print(X_train['d5'].value_counts())
+X_train.loc[X_train.d1 ==1,'dd']= 1
+X_train.loc[X_train.d2 ==1,'dd']= 2
+X_train.loc[X_train.d4 ==1,'dd']= 3
+X_train.loc[X_train.d5 ==1,'dd']= 4
+
+
+X_train[['dd']].to_csv('dclass_2010.csv')
+"""
+"""
