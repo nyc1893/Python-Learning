@@ -1,0 +1,12 @@
+看有哪些用户在用 
+top 
+ctrl + c 退出
+
+分窗口
+ctrl + b   + %   水平
+ctrl + b   + "   竖直
+
+切换窗口 panel
+ctrl + b   + 左右上下键
+
+退出当前tmux窗口  后台继续运行tmux detach
