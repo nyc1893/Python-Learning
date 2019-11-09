@@ -10,3 +10,12 @@ ctrl + b   + "   竖直
 ctrl + b   + 左右上下键
 
 退出当前tmux窗口  后台继续运行tmux detach
+
+回到原来tmux窗口   tmux a # 默认进入第一个会话
+
+tmux list-session # 查看所有会话
+
+
+
+更多命令：
+http://louiszhai.github.io/2017/09/30/tmux/
