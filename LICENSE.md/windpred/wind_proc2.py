@@ -60,11 +60,22 @@ print(X_train.shape)
 print(X_test.shape)
 X_train.columns = ['l7','l6','l5','l4','l3','l2','l1','l0']
 X_test.columns = ['l7','l6','l5','l4','l3','l2','l1','l0']
-# X_train.reset_index()
-# df3.reset_index()
-X_train=pd.concat([df3,X_train],axis=1,join='inner')
-X_test=pd.concat([df4,X_test],axis=1,join='inner')
 
+X_train = X_train.reset_index()
+X_test = X_test.reset_index()
+df3 = df3.reset_index()
+df4 = df4.reset_index()
+
+X_train=pd.concat([df3,X_train],axis=1)
+# ,ignore_index=True)
+X_test=pd.concat([df4,X_test],axis=1)
+# print(X_train.head())
+# print(X_test.head())
+
+X_train = X_train.iloc[:,[1,2,4,5,6,7,8,9,10,11]]
+X_test = X_test.iloc[:,[1,2,4,5,6,7,8,9,10,11]]
+# X_train.pop('index')
+# X_train.pop('index')
 print(X_train.shape)
 print(X_test.shape)
 
