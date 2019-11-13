@@ -61,6 +61,8 @@ print(X_test.shape)
 X_train.columns = ['l7','l6','l5','l4','l3','l2','l1','l0']
 X_test.columns = ['l7','l6','l5','l4','l3','l2','l1','l0']
 
+#next is to concate 2 table just like the process in excel
+#No aligment needed.
 X_train = X_train.reset_index()
 X_test = X_test.reset_index()
 df3 = df3.reset_index()
