@@ -1,3 +1,50 @@
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 
 /data/gpfs/home/yunchuanl/miniconda3/bin:$PATH
+
+Helper Code
+
+
+Hi,
+ 
+Your account is ready for login to Pronghorn.
+ 
+Login instructions
+
+From a terminal or shell use SSH to connect to pronghorn.rc.unr.edu then use your NetID to login.
+
+example: ssh  yunchuanl@pronghorn.rc.unr.edu
+
+For more information visit: https://github.com/UNR-HPC/pronghorn/wiki/1.-Connecting-to-Pronghorn
+ 
+Important directories
+
+Your home directory is for storing files private to your user. You are provided with 50GB of free home storage by the Office of Information Technology. Please be aware that this data is not backed up. 
+ 
+Your home directory is located in /data/gpfs/home/yunchuanl
+ 
+Applications
+
+System-level research applications are installed in the “/apps” directory. The majority of applications are installed as Singularity containers. We encourage you to install your software in containers. More information can be found here: https://www.sylabs.io/docs/.
+ 
+If you plan to install and use your own software, we recommend and encourage installation into your home directory. example: /data/gpfs/home/yunchuanl/apps
+ 
+Scheduler
+
+Pronghorn uses the Slurm scheduler. All software must be run on the cluster through Slurm. You cannot log into CPU or GPU nodes directly.
+• Slurm tutorials: https://slurm.schedmd.com/tutorials.html.
+• Slurm docs: https://slurm.schedmd.com/documentation.html.
+ 
+Getting help
+
+If you need help don't hesitate to contact us if you run into a problem.
+ 
+• docs: https://github.com/UNR-HPC/pronghorn/wiki
+• web : https://www.unr.edu/research-computing/
+• slack: https://join.slack.com/t/unrrc/signup
+• email: hpc@unr.edu
+• In person: https://www.unr.edu/research-computing/calendar - We offer a weekly “HPC Hackathon” user group meeting.
+ 
+ 
+Welcome to Pronghorn.
+
