@@ -1,0 +1,152 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
+"""
+@version: 01
+@author: 
+@license: Apache Licence 
+@python_version: python_x86 2.7.11
+@site: octowahle@github
+@software: PyCharm Community Edition
+@file: gen_online_image.py
+@time: 2016/11/28 15:15
+"""
+
+import os
+import sys
+import matplotlib.pyplot as plt
+import datetime
+# from matplotlib.dates import YearLocator, MonthLocator, DayLocator
+# from matplotlib.dates import drange, DateLocator, DateFormatter
+# from matplotlib.dates import HourLocator, MinuteLocator, SecondLocator
+import matplotlib.dates as mdates
+import pandas as pd
+import numpy as np
+
+def get_real(turb,option):  
+    if turb == 'mit':
+        tr = pd.read_csv("../data/ppmit12_2009.csv")    
+        test = pd.read_csv("../data/ppmit12_2010.csv")    
+    elif turb == 'ge':
+        tr = pd.read_csv("../data/ppge12_2009.csv")    
+        test = pd.read_csv("../data/ppge12_2010.csv")  
+
+    if option == 1:
+        tr = tr.loc[:,['ws','detadir','l7','l6','l5','l4','l3','l2','l1','l0']]
+        test = test.loc[:,['ws','detadir','l7','l6','l5','l4','l3','l2','l1','l0']]
+
+    elif option == 2:
+        tr = tr.loc[:,['ws','detadir','l8','l7','l6','l5','l4','l3','l2','l0']]
+        test = test.loc[:,['ws','detadir','l8','l7','l6','l5','l4','l3','l2','l0']]
+
+    elif option == 3:
+        tr = tr.loc[:,['ws','detadir','l9','l8','l7','l6','l5','l4','l3','l0']]
+        test = test.loc[:,['ws','detadir','l9','l8','l7','l6','l5','l4','l3','l0']]
+        
+    elif option == 4:
+        tr = tr.loc[:,['ws','detadir','l10','l9','l8','l7','l6','l5','l4','l0']]
+        test = test.loc[:,['ws','detadir','l10','l9','l8','l7','l6','l5','l4','l0']]
+
+    elif option == 5:
+        tr = tr.loc[:,['ws','detadir','l11','l10','l9','l8','l7','l6','l5','l0']]
+        test = test.loc[:,['ws','detadir','l11','l10','l9','l8','l7','l6','l5','l0']]
+
+    elif option == 6:
+        tr = tr.loc[:,['ws','detadir','l12','l11','l10','l9','l8','l7','l6','l0']]
+        test = test.loc[:,['ws','detadir','l12','l11','l10','l9','l8','l7','l6','l0']]    
+    return test
+
+def gen_image_2(l):
+    # 格式化刻度单位
+    # years=mdates.YearLocator()
+    # months=mdates.MonthLocator()
+    # days=mdates.DayLocator()
+    hours = mdates.HourLocator()
+    minutes = mdates.MinuteLocator()
+    seconds = mdates.SecondLocator()
+
+    # dateFmt = mdates.DateFormatter('%Y-%m-%d %H:%M')
+    # dateFmt = mdates.DateFormatter('%Y-%m-%d')
+    dateFmt = mdates.DateFormatter('%H:%M')  # 显示格式化后的结果
+
+    if len(l) != 3:
+        return False
+
+    # x = np.array(l[0])
+    x = l[0]
+    y1 = np.array(l[1])
+    y2 = np.array(l[2])
+    # std = sqrt(mean(abs(x - x.mean())**2)).
+    y3 = y2 +5
+    y4 = y2 -5 
+    
+
+    fig, ax = plt.subplots()
+    # format the ticks
+    ax.xaxis.set_major_locator(hours)  # 设置主要刻度
+    # ax.xaxis.set_minor_locator(minutes)  # 设置次要刻度
+    ax.xaxis.set_major_formatter(dateFmt)  # 刻度标志格式
+
+    ax.plot(x,y1, '-', marker='.', label='Actual' )
+    ax.plot(x,y2, '--', marker='.', label='Point forecast')
+    ax.fill_between(x, y3, y4, color='grey', alpha='0.5')
+
+    # ,label='distribution forecast'
+    
+    
+    
+
+    plt.xlabel('Time of day')
+    plt.ylabel('Wind Farm Generation (MW)')
+    fig.autofmt_xdate()  # 自动格式化显示方式
+    plt.legend(loc='lower right')
+    plt.show()  # 显示图片
+    # plt.savefig('filename.png')  # 保存图片
+
+
+def main():
+    pass
+
+
+if __name__ == '__main__':
+    # main()
+
+
+    df = pd.read_csv("C:/360Downloads/data/2008-2010/whole/Mits_kW_2010.csv")
+    df2 = pd.read_csv("our-10m.csv")
+
+    turb = 'mit'
+    test = get_real(turb,1)
+
+    turb = 'ge'
+    test2 = get_real(turb,1)
+
+    test['l1'] = test['l1'] + test2['l1']
+    test['l0'] = test['l0'] + test2['l0']
+
+    test['dif'] = abs(test['l1']-test['l0'])
+    yall = test['l0']
+    
+    yhat = yall.values
+    df = df.values
+    df2 = df2['0'].values
+    
+
+    
+    
+
+    time_list = []
+    pred_list =[]
+    real_list =[]
+    ind1 = 15202
+    ind2 = ind1+4*6
+    for i in range(ind1,ind2+1):
+        time_list.append(datetime.datetime(int(df[i][0]), int(df[i][1]), int(df[i][2]), int(df[i][3]), int(df[i][4]), 0))
+        pred_list.append(df2[i])
+        real_list.append(yhat[i])
+        
+
+    result_list = [
+                    time_list,pred_list,real_list
+                    ]
+    gen_image_2(result_list)
