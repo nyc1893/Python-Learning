@@ -22,18 +22,24 @@ import datetime
 import matplotlib.dates as mdates
 import pandas as pd
 import numpy as np
+from matplotlib.patches import Patch
+from matplotlib.lines import Line2D
+
+
+
+
 
 def get_real(turb,option):  
     if turb == 'mit':
-        tr = pd.read_csv("../data/ppmit12_2009.csv")    
-        test = pd.read_csv("../data/ppmit12_2010.csv")    
+        tr = pd.read_csv("../ppmit12_2009.csv")    
+        test = pd.read_csv("../ppmit12_2010.csv")    
     elif turb == 'ge':
-        tr = pd.read_csv("../data/ppge12_2009.csv")    
-        test = pd.read_csv("../data/ppge12_2010.csv")  
+        tr = pd.read_csv("../ppge12_2009.csv")    
+        test = pd.read_csv("../ppge12_2010.csv")  
 
     if option == 1:
-        tr = tr.loc[:,['ws','detadir','l7','l6','l5','l4','l3','l2','l1','l0']]
-        test = test.loc[:,['ws','detadir','l7','l6','l5','l4','l3','l2','l1','l0']]
+        tr = tr.loc[:,['ws_2009','deta_dir_2009','l7','l6','l5','l4','l3','l2','l1','l0']]
+        test = test.loc[:,['ws_2010','deta_dir_2010','l7','l6','l5','l4','l3','l2','l1','l0']]
 
     elif option == 2:
         tr = tr.loc[:,['ws','detadir','l8','l7','l6','l5','l4','l3','l2','l0']]
@@ -77,8 +83,13 @@ def gen_image_2(l):
     y1 = np.array(l[1])
     y2 = np.array(l[2])
     # std = sqrt(mean(abs(x - x.mean())**2)).
-    y3 = y2 +5
-    y4 = y2 -5 
+    tr = pd.read_csv("output.csv")  
+    tr = np.squeeze(tr.values)
+    tr = tr[ind1:ind2+1]
+    print(y2.shape)
+    print(tr.shape)
+    y3 = y2 + 1.96*tr
+    y4 = y2 - 1.96*tr 
     
 
     fig, ax = plt.subplots()
@@ -87,19 +98,26 @@ def gen_image_2(l):
     # ax.xaxis.set_minor_locator(minutes)  # 设置次要刻度
     ax.xaxis.set_major_formatter(dateFmt)  # 刻度标志格式
 
-    ax.plot(x,y1, '-', marker='.', label='Actual' )
-    ax.plot(x,y2, '--', marker='.', label='Point forecast')
+    ax.plot(x,y1, '-', marker='.',  color='b',label='Actual' )
+   
+    ax.plot(x,y2, '--', marker='.', color='r', label='Point forecast')
     ax.fill_between(x, y3, y4, color='grey', alpha='0.5')
 
     # ,label='distribution forecast'
     
     
-    
+    legend_elements = [Line2D([0], [0],linestyle='-',marker='.',color='b', lw=1, label='Actual'),
+                   Line2D([0], [0], linestyle='--',marker='.', color='r', label='Point forecast',
+                           ),
+                   Patch(facecolor='gray', edgecolor='gray',
+                         label='95% prediction interval')]
 
     plt.xlabel('Time of day')
     plt.ylabel('Wind Farm Generation (MW)')
     fig.autofmt_xdate()  # 自动格式化显示方式
-    plt.legend(loc='lower right')
+    handles=legend_elements
+    ax.legend(handles=legend_elements, loc='lower left')
+    # plt.legend(loc='lower right')
     plt.show()  # 显示图片
     # plt.savefig('filename.png')  # 保存图片
 
@@ -110,10 +128,13 @@ def main():
 
 if __name__ == '__main__':
     # main()
-
+    k1 = 5
+    k2 = 2
+    a = np.loadtxt('neatmit14\pred-mit'+str(k1)+'.txt')
+    b= np.loadtxt('neatge11\pred-ge'+str(k2)+'.txt')
 
     df = pd.read_csv("C:/360Downloads/data/2008-2010/whole/Mits_kW_2010.csv")
-    df2 = pd.read_csv("our-10m.csv")
+    df2 = a+b
 
     turb = 'mit'
     test = get_real(turb,1)
@@ -124,29 +145,26 @@ if __name__ == '__main__':
     test['l1'] = test['l1'] + test2['l1']
     test['l0'] = test['l0'] + test2['l0']
 
-    test['dif'] = abs(test['l1']-test['l0'])
+    # test['dif'] = abs(test['l1']-test['l0'])
     yall = test['l0']
     
     yhat = yall.values
     df = df.values
-    df2 = df2['0'].values
-    
-
-    
-    
+    # df2 = df2['0'].values
 
     time_list = []
     pred_list =[]
     real_list =[]
-    ind1 = 15202
-    ind2 = ind1+4*6
+    ind1 = 12587+25*8
+    ind2 = ind1+24
     for i in range(ind1,ind2+1):
         time_list.append(datetime.datetime(int(df[i][0]), int(df[i][1]), int(df[i][2]), int(df[i][3]), int(df[i][4]), 0))
         pred_list.append(df2[i])
         real_list.append(yhat[i])
-        
-
+       
     result_list = [
                     time_list,pred_list,real_list
                     ]
     gen_image_2(result_list)
+
+    
