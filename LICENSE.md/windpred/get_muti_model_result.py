@@ -15,13 +15,24 @@ df2= df2.dropna(axis=0,how='any')
 # get result respectively
 df1['Col_sum'] = df1.apply(lambda x: x.sum(), axis=1)
 df2['Col_sum'] = df2.apply(lambda x: x.sum(), axis=1)
-df1 = df1['Col_sum']
-df2 = df2['Col_sum']
-print(df1)
-print(df2)
 
-
+ind1 = df1.index.tolist()
+ind2 = df2.index.tolist()
+df1 = df1['Col_sum'].values
+df2 = df2['Col_sum'].values
+print(df1.shape)
+print(df2.shape)
+df3 = pd.DataFrame(df1)
+df4 = pd.DataFrame(df2)
+print(df3)
+print(df4)
+df3.index = ind1
+df4.index = ind2
+print(df3)
+print(df4)
 # get ordered result
-df  =  pd.concat([df1,df2])
-df = df.sort_values()
+df  =  pd.concat([df3,df4])
+
+df.sort_index(inplace=True)
+# df = df.sort_values()
 print(df)
