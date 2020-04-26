@@ -1,6 +1,8 @@
 
 
 python -m pip install -U Theano(Package name)
+python -m pip install -U  tensorflow==1.2.1 
+
 python -m pip uninstall Theano
 
 Enter the py_ile in ubuntu sys
