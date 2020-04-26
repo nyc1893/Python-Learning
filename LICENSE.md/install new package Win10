@@ -1,6 +1,7 @@
 
 
 python -m pip install -U Theano(Package name)
+python -m pip uninstall Theano
 
 Enter the py_ile in ubuntu sys
 cd /mnt/c/work/py_file
