@@ -1,9 +1,14 @@
+# https://cn.pornhub.com/view_video.php?viewkey=ph5c35ad172e757
+# https://cn.pornhub.com/view_video.php?viewkey=ph5c331d1665741
 
-#https://9xbuddy.org/process?url=https%3A%2F%2Fcn.pornhub.com%2Fview_video.php%3Fviewkey%3Dph5ce8d9ca772ca
+# https://cn.pornhub.com/view_video.php?viewkey=ph5e839f6681bf7
+# https://cn.pornhub.com/view_video.php?viewkey=ph5e839f6643fcd
+
+
 import os
 # os.system("ffprobe -show_format v1.mp4 ")
 
-
+# https://9xbuddy.org/process?url=https%3A%2F%2Fcn.pornhub.com%2Fview_video.php%3Fviewkey%3Dph5ce8d9ca772ca
 import subprocess,json
 
 
@@ -29,14 +34,24 @@ def get_length(path,mins):
 
 src = 'p1/v1.mp4'
 dir = 'p1/'
-name = 'ck'
+name = 'cang2'
 
 
-num = 4
-# list = ['00:00:00','00:03:00']
+num = 3
+gap = 5
 
-# Only the starting point:
-list = ['00:00:00','00:00:30','00:01:00','00:01:30']
+
+
+list = []
+
+for i in range(0,num):
+    n = str(gap*i)
+    s = n.zfill(2)
+    list.append('00:'+str(s)+':00')
+
+print(list)    
+    
+
 for i in range(0,num):
     
     start = list[i]
