@@ -1,5 +1,18 @@
 1. WinSCP login：
 host name:
-nxlogin.engr.unr.edu 
+  nxlogin.engr.unr.edu 
+Enter NetID and Password
 
-ssh ycliu@gpuh.cse.unr.edu
+2. link to cluster:
+  ssh ycliu@gpuh.cse.unr.edu
+  ssh -i ~/.ssh/gpuh node03
+
+3. Import Environmental Variable
+  source ~/.bashrc
+  
+4. Tmux:
+  tmux ls     (See those session)
+  tmux a      (Go back to last)
+  tmux
+  ctrl+b shift+%
+  ctrl+b shift+"
