@@ -1,0 +1,51 @@
+ssh ycliu@gpuh.cse.unr.edu
+
+Playboy753!
+Try using a jump host. 
+banyan.engr.unr.edu 
+or
+ nxlogin.engr.unr.edu
+
+ 
+
+source ~/.bashrc
+
+tmux a
+tmux attach -t -4 
+tmux ls
+pass: 
+ssh -i ~/.ssh/gpuh node03
+tmux
+ctrl+b shift+%
+htop
+ctrl+b left
+python multiprocess_Final_1.py
+
+-----------------
+
+schroot -c ycliu
+schroot -c ycliu -u ycliu
+-----------------
+/home/ycliu/anaconda3/bin
+
+export PATH=/home/ycliu/anaconda3/bin:$PATH
+
+The difference between global and local environmental varience changing
+https://www.xuqingtang.top/2019/05/03/linux%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E7%9A%84%E8%AE%BE%E7%BD%AE+%E5%85%B3%E4%BA%8Ebashrc%E4%B8%8Eprofile%E7%9A%84%E5%8C%BA%E5%88%AB/
+
+--------------
+Access to winscp:
+
+gpuh.cse.unr.edu
+port: 22
+user: iniazazari
+----------
+for using Anaconda: 
+access to schroot:
+schroot -c iniazazari -u iniazazari
+python multiprocess_Final_1.py
+-------------------------------------
+
+
+https://ph.engr.unr.edu/w/cse/gpuh/
+https://ph.engr.unr.edu/transactions/detail/PHID-XACT-WIKI-yxjfrz2tf3x5yga/
