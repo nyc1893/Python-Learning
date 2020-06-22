@@ -1,6 +1,6 @@
 ssh ycliu@gpuh.cse.unr.edu
 
-Playboy753!
+
 Try using a jump host. 
 banyan.engr.unr.edu 
 or
@@ -9,6 +9,16 @@ or
  
 
 source ~/.bashrc
+--------------------------------
+For setup Environment variables
+1. vim ~/.bashrc
+
+2. add:
+  export PATH=/home/.../anaconda3/bin:$PATH
+
+3. source ~/.bashrc
+(You need to run it every time as you open the client)
+
 
 tmux a
 tmux attach -t -4 
