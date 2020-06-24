@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Feb 20 22:47:16 2020
-
-@author: iniazazari
-
-This code converts the events based on their features and locations to a 2D image
+  Fix the problem of NAN data orignated from interpolated datasets
 """
 ##calculating running time
 
@@ -65,8 +61,8 @@ def get_class(file_name,String):
     data = data.set_index('Start')
     num, str =get_time(String)
     dt = data[str]
-    # print(dt.iloc[num,3])
-    return dt.iloc[num,3]
+    # print(dt.iloc[num,2])
+    return dt.iloc[num,2]
 start = timeit.default_timer()
 
 # min-max normalize each of PMU mesurements ([0 1])
@@ -105,6 +101,7 @@ min = num_time_sample
 st=[]
 rootpath = os.listdir(path1)
 rootpath.sort(key= lambda x:str(x))
+flag = 1
 for i in range(1,23*296+1):
     
 
@@ -113,7 +110,8 @@ for i in range(1,23*296+1):
     if os.path.exists(filename) ==1:
         df=pq.read_table(filename).to_pandas()
         # print('hahas')
-        
+        if (df['df'].isna().sum()!=0):
+            flag = 0
         #st.append(df['v_grad']) #extract gradient of voltage column from each PMU
         #st.append(df['i_grad']) #extract gradient of current column from each PMU
         #st.append(df['vp_a_diff_grad']) #extract gradient of positive voltage angle column from each PMU 
@@ -139,7 +137,7 @@ for i in range(1,23*296+1):
         j = j+1
         print('j = ',j)
         st = np.array(st) 
-        if min==num_time_sample:
+        if (min==num_time_sample and flag ==1):
             features.append(st)
             event_name = rootpath[i-1]
             planned_event=['Planned Operations','Planned Service', 'Planned Testing']
@@ -148,15 +146,15 @@ for i in range(1,23*296+1):
                 temp=  get_class(event_log,event_name)
                 if temp==planned_event[0] or temp==planned_event[1] or temp==planned_event[2]:
                    labels.append(4)
-                # else:
-                labels.append(0)
+                else:
+                    labels.append(0)
                     
             elif 'XFMR' in event_name:
                 temp=  get_class(event_log,event_name)
                 if temp==planned_event[0] or temp==planned_event[1] or temp==planned_event[2]:
                    labels.append(5)
-                # else:
-                labels.append(1)
+                else:
+                    labels.append(1)
                       
             elif 'Frequency' in event_name: 
                 labels.append(2)
@@ -164,7 +162,7 @@ for i in range(1,23*296+1):
                 labels.append(3)        
         st=[]       
         min=num_time_sample
-
+        flag = 1
 print(j)
 features=np.array(features) 
 print(features.shape)
