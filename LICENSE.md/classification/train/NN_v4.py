@@ -7,7 +7,6 @@ after separate PMU : X_train =(281 x 23 = 6463, 36000, 1)
 """
 
 
-
 import tensorflow as tf
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten, Conv2D, MaxPooling2D
@@ -19,6 +18,7 @@ from tensorflow.keras import optimizers,regularizers
 from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.utils import shuffle
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -162,9 +162,9 @@ X_train, X_val, y_train, y_val=train_test_split(X_train, y_train, test_size=0.25
 
 #separeting PMUs to make more Training and Validation sets
 X_train, y_train= separatePMUs(X_train,y_train)
-
+X_train, y_train = shuffle(X_train, y_train)
 X_val, y_val= separatePMUs(X_val,y_val)
-
+X_val, y_val = shuffle(X_val, y_val)
                     
 
 #number of classes
