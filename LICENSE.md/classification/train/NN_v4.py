@@ -352,8 +352,8 @@ for dense_layer in dense_layers:
                     #all_accuracy.append('accuracy_'+str(round(acc, 2))+'_num_filter_'+str(layer_size)+'_num_convL_'+str(conv_layer)+'_num_denseL_'+str(dense_layer))
                     '''
                     stop = timeit.default_timer()
-                    #running time
-                    #print('Time: ', stop - start)
+                    running time
+                    print('Time: ', stop - start)
 
 
 
