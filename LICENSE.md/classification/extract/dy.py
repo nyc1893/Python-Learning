@@ -3,6 +3,8 @@
 Created on 6/18/2020 2020
 This is the main content to extract the dataset from cluster.
 By using 'python ./dy.py 2 26 30' as input for month, starting date, end date.
+ Some times have to change line 135: pool = multiprocessing.Pool(len(df_iter))    
+                        len(df_iter)--> 1  to avoid making cluster out of memory  
 @author: Barron
 """
 
