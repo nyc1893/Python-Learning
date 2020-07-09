@@ -1,5 +1,5 @@
 """
-For DNN hp tuning
+For DNN hp tuning using individual PMU ID as both training and testing
 
 """
 
