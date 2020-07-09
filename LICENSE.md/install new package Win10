@@ -11,3 +11,10 @@ cd /mnt/c/work/py_file
 
 In win10 cmd platform, the package is installed in here:
 C:\Users\yunchuanl\AppData\Local\Continuum\anaconda3\Lib\site-packages\neat
+
+并行的安装各种版本
+Linux：
+python2   -m pip install SomePackage  # default Python 2
+python2.7 -m pip install SomePackage  # specifically Python 2.7
+python3   -m pip install SomePackage  # default Python 3
+python3.4 -m pip install SomePackage  # specifically Python 3.4
