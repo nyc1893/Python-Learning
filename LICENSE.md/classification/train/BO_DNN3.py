@@ -1,5 +1,5 @@
 """
-DNN hp tuning for in
+For DNN hp tuning using individual PMU training and majority vote testing
 
 """
 import matplotlib.pyplot as plt
