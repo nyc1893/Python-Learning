@@ -41,7 +41,8 @@ def unwrap_angle(df1):
 
 ## list for missing PMUs for all events
 all_missing_pmu_list=[]
-path  = '../../8weeks_3/'
+path  = '../../8weeks_4/'
+path2  = '../../../'
 # with os.scandir('/Volumes/Iman/IBM data/Events/B/Original/8 weeks-1/') as entries:
 with os.scandir(path) as entries:
     for entry in entries:
@@ -54,7 +55,7 @@ with os.scandir(path) as entries:
     
         df=pq.read_table(filename).to_pandas()
         
-        PMU_list = pd.read_csv('PMU_reporting_rate.csv')
+        PMU_list = pd.read_csv(path2 + 'PMU_reporting_rate.csv')
         
         
         PMU_list_1 = PMU_list['60fps']
