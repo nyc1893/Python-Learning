@@ -1,0 +1,5 @@
+
+NN_v2 -->  data: 2016-va_set   tr_set
+BO_DNN3  run 4 models -->  best models
+Load label -->  label_0~3
+ll2        -->  test result
