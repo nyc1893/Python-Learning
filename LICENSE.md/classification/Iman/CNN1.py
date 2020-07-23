@@ -129,7 +129,7 @@ y_train = pk1
 
 ##Constants
 
-EPOCHS=30
+EPOCHS=3
 BATCH_SIZE=16
 
 # set the number of time samples (originallly it is 10 mins of data)
@@ -435,7 +435,7 @@ search_result = gp_minimize(func=fitness,
 
 stop = timeit.default_timer()
 #running time
-print('Time: ', stop - start)
+print('Overall Time:(mins)', (stop - start)/60)
 
 plot_convergence(search_result)
 ck = 'S12'
