@@ -37,7 +37,6 @@ import datetime
 
 start = timeit.default_timer()
 
-
 def removePlanned(X,y):
     """
     THIS FUNCTION REMOVES THE PLANNED EVENTS FROM THE EVENT DATASET
@@ -80,27 +79,30 @@ def separatePMUs(X,y):
     num_pmu=X.shape[1]
     num_sample=X.shape[2]
     X=X.reshape(num_case*num_pmu,num_sample)
-    y_new=[]
+    y2=[]
     for i in range(len(y)):
         if y[i]==0:
             for j in range(num_pmu):
-                y_new.append(0)
+                y2.append(0)
                 
-        if y[i]==1:
+        elif y[i]==1:
             for j in range(num_pmu):
-                y_new.append(1)
+                y2.append(1)
                 
-        if y[i]==2:
+        elif y[i]==2:
             for j in range(num_pmu):
-                y_new.append(2)
+                y2.append(2)
                 
-        if y[i]==3:
+        elif y[i]==3:
             for j in range(num_pmu):
-                y_new.append(3)
-        
-    
-    return X,np.array(y_new)
-
+                y2.append(3)
+        elif y[i]==4:
+            for j in range(num_pmu):
+                y2.append(4)       
+        elif y[i]==5:
+            for j in range(num_pmu):
+                y2.append(5)    
+    return X,np.array(y2)
 
 
 #default_parameters = [1e-5, 1, 16, 'relu']
