@@ -438,4 +438,5 @@ stop = timeit.default_timer()
 print('Time: ', stop - start)
 
 plot_convergence(search_result)
-plt.save('plt.png')
+ck = 'S12'
+plt.savefig(ck+'-plot1.png', format='png')
