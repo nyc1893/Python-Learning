@@ -16,7 +16,7 @@ import pyarrow.parquet as pq
 import glob
 from datetime import datetime, timedelta
 import time
-
+import sys
             
 '''Define task function'''
 def Extract_event(filename,df_it,event_num):
