@@ -143,4 +143,4 @@ ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=y, cmap=plt.cm.nipy_spectral,
 
 plt.show()
 """
-"""
+
