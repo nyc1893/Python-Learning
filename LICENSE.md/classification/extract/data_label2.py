@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Feb 20 22:47:16 2020
-
-@author: iniazazari
+@author: Barron
 
 This code converts the events based on their features and locations to a 2D image
+No mutilabel-info
 """
 ##calculating running time
 
