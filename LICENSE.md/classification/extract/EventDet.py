@@ -5,6 +5,7 @@
 #noise_var = 0.02 * np.nanmedian(d_i)
 # He also mentioned we can use the rocof as input
 
+
 import pandas as pd
 import numpy as np
 import pyarrow.parquet as pq
@@ -13,7 +14,9 @@ import math
 from scipy.stats.distributions import chi2
 import os
 
-path1 = '/scratch/share/extracted_data/8weeks_1/'
+k = 1
+path1 = '/scratch/share/extracted_data/8weeks_'+str(k)+'/'
+path2 = 'det'+str(k)+'/'
 # fname = '2016_Feb_01_0_Line Outage'
 # df=pq.read_table(path1+fname).to_pandas()
 
@@ -54,7 +57,7 @@ def deal(df,fname):
     # print (df['id'].value_counts())
     p2 = []
     t2 = []
-    df['id'].value_counts().to_csv('ck.csv')
+    df['id'].value_counts().to_csv(path2+'ck.csv')
     for i_PMU in range(n_PMU):
         p = []
         t = []
@@ -75,9 +78,9 @@ def deal(df,fname):
             df2 = pd.DataFrame(df2)
             df2.columns = ['a']
             # print('I am here 1')
-            df2.to_csv('cc.csv',index = None)
+            df2.to_csv(path2+'cc.csv',index = None)
             
-            df2 =  pd.read_csv('cc.csv')
+            df2 =  pd.read_csv(path2+'cc.csv')
             # df = df['vp_a'].astype(str).astype(int)
             df2['a'] = df2['a'].astype("float")
             dt = np.squeeze(df2.values)
@@ -170,10 +173,10 @@ def deal(df,fname):
         # print(df.head()) 
         # print('pmu shape',df.shape)   
         # df.to_csv(fname+'.csv',index =None)
-        df.to_excel(fname+'.xls',sheet_name='biubiu',index =None)
+        df.to_excel(path2+fname+'.xls',sheet_name='a',index =None)
         print(fname + ' save done!')
     else:
-        f = open('EventDetlog.txt','a')
+        f = open(path2+'EventDetlog.txt','a')
         f.write('\n ' + fname + ' no detected.')
         f.close()
         
