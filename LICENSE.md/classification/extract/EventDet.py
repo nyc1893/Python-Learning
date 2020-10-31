@@ -13,17 +13,12 @@ import matplotlib.pyplot as plt
 import math
 from scipy.stats.distributions import chi2
 import os
-
-k = 1
-path1 = '/scratch/share/extracted_data/8weeks_'+str(k)+'/'
-path2 = 'det'+str(k)+'/'
-# fname = '2016_Feb_01_0_Line Outage'
-# df=pq.read_table(path1+fname).to_pandas()
+import sys
 
 
 
     
-def deal(df,fname):
+def deal(df,fname,path2):
     # try:
     #
     PMU_list = pd.read_csv('../../../../PMU_reporting_rate.csv')
@@ -191,8 +186,9 @@ def deal(df,fname):
 def check(df):
     # print(df.count())
     df.to_csv('ck.csv',index =None)
-def main():    
-
+def main(k):    
+    path1 = '/scratch/share/extracted_data/8weeks_'+str(k)+'/'
+    path2 = 'det'+str(k)+'/'
     fileList=os.listdir(path1)
     for f in fileList:
 
@@ -201,7 +197,7 @@ def main():
         if x[0]:
             fname = x[0]
             df=pq.read_table(path1+fname+'.parquet').to_pandas()
-            deal(df,fname)
+            deal(df,fname,path2)
         else:
             continue
         
@@ -211,8 +207,8 @@ def test():
     deal(df,fname)
     # check(df)
 if __name__ == '__main__':  
-
-    main()
+    k = int(sys.argv[1])
+    main(k)
     # test()    
 
     
