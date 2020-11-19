@@ -1,0 +1,6 @@
+
+1. get_label --> Ltrain and Ltest data
+2. sn_pred  --> generate the sno labels
+3. noise_pred --> get the different type of the prediction
+
+2-2 testget_label --> get see generated labels acc
