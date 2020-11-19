@@ -34,150 +34,10 @@ import time
 from sklearn import metrics  
 import pickle as pickle  
 import pandas as pd
-start = timeit.default_timer()
-
-def onlylabel(X,y):
-    """
-    THIS FUNCTION REMOVES THE PLANNED EVENTS FROM THE EVENT DATASET
-    """
-    
-    X_new=[]
-    y_new=[]
-    for i in range(len(y)):
-        #print(i)
-    
-        if y[i]==0:
-            y_new.append(0)
-            X_new.append(X[i,:,:,:])
-    
-        # elif y[i]==1:
-            # y_new.append(1)
-            # X_new.append(X[i,:,:,:])
-    
-            
-        elif y[i]==2:
-            y_new.append(1)
-            X_new.append(X[i,:,:,:])
-        
-        # elif y[i]==3:
-            # y_new.append(3)
-            # X_new.append(X[i,:,:,:])
-        
-
-    return  np.array(X_new), np.array(y_new)
-
-def rd2(k):
-    path1 = '../../pickleset/'
-
-    list = ['rocof','v_grad','i_grad', 'vp_a_diff_grad', 'ip_a_diff_grad','f_grad']
-    
-    p1 = open(path1 +'X_S'+str(k)+'_'+str(list[0])+'_6.pickle',"rb")
-    pk1 = pickle.load(p1)
-    # len(list)
-    # for i in range(1,len(list)):
-        # p2 = open(path1 +'X_S'+str(k)+'_'+str(list[i])+'_6.pickle',"rb")
-        # pk2 = pickle.load(p2)    
-    
-        # pk1=np.concatenate((pk1, pk2), axis=3)
-        
-    fps=60
-    start_crop=int(fps*60*4)
-    stop_crop=int(fps*60*8)
-
-    pk1=pk1[:,:,start_crop:stop_crop,:]
-    
-    p3 = open(path1 + 'y_S'+str(k)+'_rocof_6.pickle',"rb")
-    pk3 = pickle.load(p3)        
-    
-    path2 = '../../cnn2/index/'
-    tr=np.load(path2 +'tr_' +str(k)+'.npy')
-    val=np.load(path2 +'val_' +str(k)+'.npy')
-    tr=tr.tolist()  
-    val=val.tolist() 
-
-    pk1,pk3=onlylabel(pk1,pk3)
-    
-    X_train = pk1
-    y_train = pk3
-
-    
-    print(X_train.shape) 
-    # print(X_val.shape) 
-    print(y_train.shape) 
-    # print(y_val.shape) 
-    
-    return X_train,  y_train
-    
-def removePlanned(X,y):
-    """
-    THIS FUNCTION REMOVES THE PLANNED EVENTS FROM THE EVENT DATASET
-    """
-    
-    X_new=[]
-    y_new=[]
-    for i in range(len(y)):
-        #print(i)
-    
-        if y[i]==0:
-            y_new.append(0)
-            X_new.append(X[i,:,:,:])
-    
-        elif y[i]==1:
-            y_new.append(1)
-            X_new.append(X[i,:,:,:])
-    
-            
-        elif y[i]==2:
-            y_new.append(2)
-            X_new.append(X[i,:,:,:])
-        
-        elif y[i]==3:
-            y_new.append(3)
-            X_new.append(X[i,:,:,:])
-        
-
-    return  np.array(X_new), np.array(y_new)
 
 
-def separatePMUs(X,y):
-    
-    """
-    This function separates features and their corresponding labels for each PMU
-    to make more events 
-    """
-    
-    num_case=X.shape[0]
-    num_pmu=X.shape[1]
-    num_sample=X.shape[2]
-    X=X.reshape(num_case*num_pmu,num_sample)
-    y2=[]
-    for i in range(len(y)):
-        if y[i]==0:
-            for j in range(num_pmu):
-                y2.append(0)
-                
-        elif y[i]==1:
-            for j in range(num_pmu):
-                y2.append(1)
-                
-        elif y[i]==2:
-            for j in range(num_pmu):
-                y2.append(2)
-                
-        elif y[i]==3:
-            for j in range(num_pmu):
-                y2.append(3)
-        elif y[i]==4:
-            for j in range(num_pmu):
-                y2.append(4)       
-        elif y[i]==5:
-            for j in range(num_pmu):
-                y2.append(5)    
-    return X,np.array(y2)
+from rno_fun import data_lowfreq
 
-    
-
-    
     
     
 
@@ -230,32 +90,25 @@ def svm_classifier(train_x, train_y):
   
 
   
-def cc():
-    X_train,y_train = rd2(1)
-    X_test,y_test = rd2(2)
-    X_test, y_test= separatePMUs(X_test,y_test)
-    X_train,y_train= separatePMUs(X_train,y_train)
-    return X_train,y_train,X_test,y_test
+
+  
+
       
-def main(l):
+def run():
     # data_file = "H:\\Research\\data\\trainCG.csv"  
     s1 = timeit.default_timer()  
 
-    train_x, train_y, test_x, test_y = cc() 
-    # print('train_x.shape',train_x.shape)
-    # print('train_y.shape',train_y.shape)
-    # print('test_x.shape',test_x.shape)
-    # print('test_y.shape',test_y.shape)
-    
+    train_x, train_y,test_x, test_y =readdata()   
 
+    
+ 
     X_train = train_x
     X_test = test_x
     
     y_test = test_y
     y_train = train_y
  
-    
-    print(X_test.shape)
+
     train = 1
     if train == 1:
         thresh = 0.5  
@@ -268,7 +121,7 @@ def main(l):
              'LR', 
             'RF', 
             # 'DT', 
-            # 'SVM',
+            'SVM',
 
             'GBDT'
             ]  
@@ -280,8 +133,8 @@ def main(l):
                       'KNN':knn_classifier,  
                        'LR':logistic_regression_classifier,  
                        'RF':random_forest_classifier,  
-                       # 'DT':decision_tree_classifier,  
-                      # 'SVM':svm_classifier,  
+                       'DT':decision_tree_classifier,  
+                      'SVM':svm_classifier,  
                     # 'SVMCV':svm_cross_validation,  
                      'GBDT':gradient_boosting_classifier  
         }  
@@ -290,6 +143,8 @@ def main(l):
         # 
         print('train_y.shape',y_test.shape)
         df  = y_test[:,np.newaxis]
+        df2 = y_train[:,np.newaxis]
+        
         list = []
         list.append('real')
         for classifier in test_classifiers:  
@@ -297,12 +152,20 @@ def main(l):
             start_time = time.time()  
             model = classifiers[classifier](train_x, train_y)  
             print('training took %fs!' % (time.time() - start_time))  
-            predict = model.predict(X_test)  
+            predict = model.predict(X_test) 
+            train_out = model.predict(X_train)             
             # np.save(classifier+"_pred.npy",predict)
-            print(predict.shape)
+            
             predict = predict[:,np.newaxis]
-    
+            train_out = train_out[:,np.newaxis]
+            
+            print(df.shape)
+            print(predict.shape)
+            print(df2.shape)
+            print(train_out.shape)           
             df = np.concatenate((df,predict),axis=1)
+            df2 = np.concatenate((df2,train_out),axis=1)
+            
             list.append(str(classifier))
             # precision = metrics.precision_score(test_y, predict)  
             # recall = metrics.recall_score(test_y, predict)  
@@ -314,19 +177,52 @@ def main(l):
                 # model_save[classifier] = model  
 
         df = pd.DataFrame(df,columns=list)
-        df.to_csv('sn_label'+str(l)+'.csv',index =None)
-        print('X_tain.shape',X_tain.shape)
+        df2 = pd.DataFrame(df2,columns=list)
+        
+        df.to_csv('Ltest_34.csv',index =None)
+        df2.to_csv('Ltrain_12.csv',index =None)
+        
+
         print('save done!')
-        # if model_save_file != None:  
-            # pickle.dump(model_save, open(model_save_file, 'wb')) 
+
     s2 = timeit.default_timer()  
     print ('Runing time is (mins):',round((s2 -s1)/60,2))
-
-
     
     
+def rd1(i):
+    path = 'data/'
+    X_train =  pd.read_csv(path +'D'+str(i)+'_Ltr.csv')
+    X_train = X_train.rename(columns={'21':'label'})
+    y_train = X_train.pop('label')
+    y_train = y_train.astype('int') 
+    # print(X_train.head())
+    
+    X_test =  pd.read_csv(path +'D'+str(i)+'_Ltest.csv')
+    X_test = X_test.rename(columns={'21':'label'})
+    y_test = X_test.pop('label')
+    y_test = y_test.astype('int') 
+    return  X_train.values,y_train.values,X_test.values,y_test.values
+    
+def readdata():
+    X_train,y_train, X_val, y_val= rd1(1)
+    for i in range(2,7):
+        X_train2,y_train2, X_val2, y_val2= rd1(i)
+        X_train = np.concatenate((X_train,X_train2), axis=0)
+        y_train = np.concatenate((y_train,y_train2), axis=0)
+        X_val = np.concatenate((X_val,X_val2), axis=0)
+        y_val = np.concatenate((y_val,y_val2), axis=0)
+        
+    print('unique-ytran',np.unique(y_train))
+    print('X_train.shape',X_train.shape) 
+    print('y_train.shape',y_train.shape) 
+    print('X_val.shape',X_val.shape) 
+    print('y_val.shape',y_val.shape)     
+    return X_train,y_train, X_val, y_val
+    
+def main():
+    run()
+
 if __name__ == '__main__':  
 
-    main(0)
+    main()
 
-    # read_data(0)
