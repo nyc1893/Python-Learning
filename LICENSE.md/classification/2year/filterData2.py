@@ -26,7 +26,8 @@ import pickle
 import timeit
 import datetime
 from pyts.image import MarkovTransitionField
-
+from random import shuffle
+import collections
 from scipy import signal 
 import os
 import sys
@@ -267,20 +268,30 @@ def cal4(X_train, y_train,X_train2, y_train2,fname):
                 k = np.mean(x)
                 list2 = []
                 list3 = []
+                list4 = []
+                list5 = []
                 list2.append(ind)   
-                list3.append(ind2)                 
-                
-
+                list3.append(ind2) 
+                if(zz[ind]<-0.1):
+                    list4.append(ind)
+                    
+                if(np.abs(z2[ind2])>6000):
+                    list5.append(ind2)
                 score = []
                 for ii in range (0, 89):
                     list1 = range(ii*120,(ii+1)*120)
                     if (diff(list1,list2)):
                         point[ii] +=1
+                    if (diff(list1,list4)):
+                        point[ii] +=8          
+                        
                     if (diff(list1,list3)):
                         point2[ii] +=1
+                    if (diff(list1,list5)):
+                        point2[ii] +=3                        
             p1 =0    
             ind =0
-            for ii in range (0, 89):    
+            for ii in range (1, 89):    
                 if(p1<point[ii]):
                     p1 = point[ii]
                     ind = ii
@@ -288,7 +299,7 @@ def cal4(X_train, y_train,X_train2, y_train2,fname):
             
             p2=0    
             ind2 =0
-            for ii in range (0, 89):    
+            for ii in range (1, 89):    
                 if(p2<point2[ii]):
                     p2 = point2[ii]
                     ind2 = ii
@@ -315,7 +326,7 @@ def diff(listA,listB):
         return False    
 
 def get_2sec_start():
-    for i in range(1,13+1):
+    for i in range(3,13+1):
         X_train,  y_train   = rd2(i,1)
         X_train2,  y_train2  = rd2(i,0)
         fname = "gen/set"+str(i)
@@ -331,17 +342,17 @@ def get_split(num,y3):
     np.save(path2+'tr_'+str(num)+'.npy',tr) 
     np.save(path2+'val_'+str(num)+'.npy',val)
             
-def fil_Data(X_train, y_train,X_train2, y_train2,i): 
-    fname1 = "gen/set"+str(i)+"x1.npy"
+def fil_Data(X_train, y_train,X_train2, y_train2,ii): 
+    fname1 = "gen/set"+str(ii)+"x1.npy"
     a = np.load(fname1) 
     
-    fname2 = "gen/set"+str(i)+"x2.npy"
+    fname2 = "gen/set"+str(ii)+"x2.npy"
     b = np.load(fname2)     
     
 
     path2 = 'index4/'
-    tr = np.load(path2+'tr_'+str(i)+'.npy') 
-    val = np.load(path2+'val_'+str(i)+'.npy') 
+    tr = np.load(path2+'tr_'+str(ii)+'.npy') 
+    val = np.load(path2+'val_'+str(ii)+'.npy') 
     # print("tr.shape",tr.shape)
     list1 = tr.astype(int).tolist()
     list2 = val.astype(int).tolist()
@@ -366,6 +377,7 @@ def fil_Data(X_train, y_train,X_train2, y_train2,i):
             if(c+120<10800 and c>-1 and d+120<10800 and d>-1):
 
                 y = y_train[j]
+
                 x = X_train[j,:,c:c+120,:].reshape(-1,23,120,1)
                 x2 = X_train2[j,:,d:d+120,:].reshape(-1,23,120,1)
                 # print(y)
@@ -396,30 +408,17 @@ def fil_Data(X_train, y_train,X_train2, y_train2,i):
     # return vp,rof,label
 
         
-def dataPack():
+def dataPack(ii):
 
-    i=10
-    X_train,  y_train   = rd2(i,1)
-    X_train2,  y_train2  = rd2(i,0)
+
+    X_train,  y_train   = rd2(ii,1)
+    X_train2,  y_train2  = rd2(ii,0)
     print("X_train2",X_train2.shape)
-    vp,rof,label,vp2,rof2,label2= fil_Data(X_train, y_train,X_train2, y_train2,i)
+    vp,rof,label,vp2,rof2,label2= fil_Data(X_train, y_train,X_train2, y_train2,ii)
     # vp,rof,label= fil_Data(X_train, y_train,X_train2, y_train2,i)
     
     
-    
-    # print("vp.shape",vp.shape)
-    for i in range(11,13+1):
-        X_train,  y_train   = rd2(i,1)
-        X_train2,  y_train2  = rd2(i,0)
 
-        vpp,roff,labell,vpp2,roff2,labell2= fil_Data(X_train, y_train,X_train2, y_train2,i)
-        vp = np.concatenate((vp, vpp), axis=0)
-        rof = np.concatenate((rof, roff), axis=0)
-        label = np.concatenate((label, labell), axis=0)
-        vp2 = np.concatenate((vp2, vpp2), axis=0)
-        rof2 = np.concatenate((rof2, roff2), axis=0)
-        label2 = np.concatenate((label2, labell2), axis=0)
-        
     # print("vp",vp.shape)
     # print("rof",rof.shape)
     # print("label",label.shape)
@@ -497,7 +496,7 @@ def clean(vp,rof,label):
 def deal_mtf(data,size):
     fold =  data.shape[0]//1000
     res =  data.shape[0]%1000
-    mtf = MarkovTransitionField(image_size=size)
+    mtf = MarkovTransitionField(image_size=size,strategy='quantile',n_bins=10)
     
     temp = mtf.fit_transform(data[:1000])
     for i in range(1, fold):
@@ -512,7 +511,7 @@ def deal_mtf(data,size):
 
 def deal_mtf2(data,size):
 
-    mtf = MarkovTransitionField(image_size=size)
+    mtf = MarkovTransitionField(image_size=size,strategy='quantile',n_bins=10)
     i = 0
     j = 0
     temp = data[i,j,:,:]
@@ -547,9 +546,9 @@ def deal_mtf2(data,size):
 
 
     
-def MTF():
+def MTF(ii):
 
-    vp,rof,label,vp2,rof2,label2 = dataPack()
+    vp,rof,label,vp2,rof2,label2 = dataPack(ii)
     size = 120
     vp,rof,label = clean(vp,rof,label)
 
@@ -568,12 +567,63 @@ def MTF():
     print("rof2",rof2.shape) 
     print("label2",label2.shape)
     data = (vp,rof,label,vp2,rof2,label2)
-    file = open('gen/pack3', 'wb')
+    file = open('gen/pack'+str(ii), 'wb')
     pickle.dump(data, file)
     file.close()
     print("pickle save done!")    
     
-
+def read_picture():
+    path1 = 'gen/'
+    p1 = open(path1 +'pack'+str(1),"rb")
+    vp,rof,label,vp2,rof2,label2 = pickle.load(p1)
+    
+    # list1 = []
+    # list2 = []
+    # list3 = []
+    # list4 = []
+    
+    # for i in range(0,51):
+        # if(label2[i] == 0):
+            # list1.append(i)
+        # elif(label2[i] == 1):
+            # list2.append(i)
+        # elif(label2[i] == 2):
+            # list3.append(i)
+        # elif(label2[i] == 3):
+            # list4.append(i)
+    # shuffle(list1)
+    # shuffle(list2)
+    # shuffle(list3)
+    # print(list1[:5])
+    # print(list2[:5])
+    # print(list3)
+    # print(list4)
+    # print(list4[:5])
+    a = vp2[1,:,:,1].reshape(-1)
+    print(collections.Counter(a))
+    
+    
+    # for i in range(0,3):
+        # plt.figure(figsize=(6,8))
+        # plt.subplot(4,2, 1)
+        # plt.imshow(vp2[list1[i],:,:,1], cmap='rainbow', origin='lower')
+        # plt.subplot(4,2, 2)
+        # plt.imshow(rof2[list1[i],:,:,1], cmap='rainbow', origin='lower')
+        # plt.subplot(4,2, 3)
+        # plt.imshow(vp2[list2[i],:,:,1], cmap='rainbow', origin='lower')
+        # plt.subplot(4,2, 4)
+        # plt.imshow(rof2[list2[i],:,:,1], cmap='rainbow', origin='lower')
+        # plt.subplot(4,2, 5)
+        # plt.imshow(vp2[list3[i],:,:,1], cmap='rainbow', origin='lower')
+        # plt.subplot(4,2, 6)
+        # plt.imshow(rof2[list3[i],:,:,1], cmap='rainbow', origin='lower')
+        # plt.subplot(4,2, 7)
+        # plt.imshow(vp2[list4[i],:,:,1], cmap='rainbow', origin='lower')
+        # plt.subplot(4,2, 8)
+        # plt.imshow(rof2[list4[i],:,:,1], cmap='rainbow', origin='lower')    
+        # plt.tight_layout()
+        # plt.savefig('gen/imshow'+str(i+5)) 
+    
     
 def read_ind():
     i = 1
@@ -590,9 +640,10 @@ def main():
     
     # doit()
     # dataPack()
-    MTF()
+    # MTF(1)
+    # read_picture()
     # 
-    # get_2sec_start()
+    get_2sec_start()
     # MTF2()
 
     # rd2(1,1)
