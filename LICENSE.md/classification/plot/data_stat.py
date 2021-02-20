@@ -1,5 +1,5 @@
 
-# This is for Feq CWT^2 use
+# To calculate the stat value of different class
 # import matplotlib.pyplot as plt
 # import tensorflow as tf
 import numpy as np
