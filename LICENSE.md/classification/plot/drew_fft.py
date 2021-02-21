@@ -53,6 +53,7 @@ def date_fft(y):
     # 显示归一化处理后单边序列
     plt.subplot(212)
     plt.plot(xf2, yf2, 'b')
+    # plt.bar(xf2, yf2, alpha=0.99, width = 1, facecolor = 'blue', edgecolor = 'white', label='one', lw=1)
     # 注意这里的颜色可以查询颜色代码表
     plt.xlabel("Freq (Hz)")
     plt.ylabel("|Y(freq)|")
