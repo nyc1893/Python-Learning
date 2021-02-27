@@ -1,5 +1,5 @@
 
-# This is for Feq CWT^2 use
+# Save the data in form of MTF 
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
@@ -178,7 +178,14 @@ def Modified_Z(data):
     dev_med = np.array(data) -median
     # print("dev_med.shape",dev_med.shape)
     mad = np.median(np.abs(dev_med))
-    z_score = dev_med/(mad*mad)
+    if mad!=0:
+        
+        z_score = dev_med/(c*mad)
+    else : 
+        df = pd.DataFrame(data)
+        meanAD = df.mad().values
+        z_score =  dev_med/(1.253314*meanAD)
+        
     return z_score
    
 def diff(listA,listB):
@@ -231,16 +238,20 @@ def dataPack(f,ii):
 
     return X_train,y_train,X_val,y_val
     
-def select(X):
+def select(X,y):
     res =[]
     for j in range(0,X.shape[0]):
         nums = []
-        # list = []
+        
         for i in range(0,23):
             temp = X[j,i,:,0]
             nums.append(np.max(temp)-np.min(temp))
             
         max_num_index_list = map(nums.index, heapq.nlargest(3, nums))
+        # min_list = map(nums.index, heapq.nsmallest(3, nums))
+        # if(y[j]==3):
+            # ll = list(min_list)
+        # else:
         ll = list(max_num_index_list)
         # temp = X[j,ll,:,:]
         res.append(ll)
@@ -261,7 +272,7 @@ def cal4(X_train, X_train2, y_train,fname):
         
         for i in range(0,3):
             
-            x = X_train[j,i,:,:]/vpmean
+            x = X_train[j,i,:,:]
             x2 = X_train2[j,i,:,:]
             x= np.squeeze(x)
             x2= np.squeeze(x2)
@@ -270,7 +281,7 @@ def cal4(X_train, X_train2, y_train,fname):
             zz= Modified_Z(x)
             z2= Modified_Z(x2)
             # print("zz.shape",zz.shape)
-            x2 = np.abs(x2)
+            # x2 = np.abs(x2)
             ind = np.argmin(zz)
             ind2 = np.argmin(z2)
 
@@ -312,10 +323,12 @@ def cal4(X_train, X_train2, y_train,fname):
     print("save done")    
     
     
+
+
 def selected(ii):
     X_train,y_train,X_val,y_val  = dataPack(1,ii)
     X_train2,y_train2,X_val2,y_val2 = dataPack(0,ii)
-    index = select(X_train)
+    index = select(X_train,y_train)
 
     res1 =[]
     res2 =[]
@@ -332,7 +345,7 @@ def selected(ii):
     
     res3 =[]
     res4 =[]
-    index = select(X_val)
+    index = select(X_val,y_val)
     for j in range(0,y_val.shape[0]):
         ind = np.squeeze(index[j])
         
@@ -386,12 +399,12 @@ def save_data(ii):
     X_val = np.concatenate((vp2, rof2), axis=3)
     data = (X_train,label,X_val,label2) 
   
-    pickle_out = open('gen/X_'+str(ii)+'.pickle',"wb")
+    pickle_out = open('gen/X2_'+str(ii)+'.pickle',"wb")
     pickle.dump(data, pickle_out, protocol=2)
     pickle_out.close()     
     
 def load_data(ii):   
-    pickle_in = open("gen/X_"+str(ii)+".pickle","rb")
+    pickle_in = open("gen/X2_"+str(ii)+".pickle","rb")
     X_train,y_train,X_val,y_val= pickle.load(pickle_in)
   
     print(X_train.shape)
@@ -422,18 +435,25 @@ def fil_Data(X_train, y_train,X_train2, y_train2,ff):
                 y = y_train[j]
                 st1 = [] 
                 st2 = []
-                vv = np.mean(X_train[j,:,:,:])
+                # vv = np.mean(X_train[j,:,:,:])
                 for i in range(0,3):
-                    x = X_train[j,i,:,:]/vv
+                    x = X_train[j,i,:,:]
                     x2 = X_train2[j,i,:,:]
                     
                     Hlight = range(c,c+120) # vp_m
                     Hlight2 = range(d,d+120)# rocof
                     
-                    if(y !=3 ):
+                    if(y ==0):
+                        x = x[Hlight]
+                        x2 = x2[Hlight]
+                    elif(y ==2 ):
                         x = x[Hlight2]
                         x2 = x2[Hlight2]
-
+                        
+                    elif(y ==1 ):
+                        x = x[Hlight2]
+                        x2 = x2[Hlight2]
+                        
                     temp1 = np.squeeze(x)
                     temp2 = np.squeeze(x2)
                     flag = 0
@@ -447,7 +467,7 @@ def fil_Data(X_train, y_train,X_train2, y_train2,ff):
                             
                     if(flag == 1):
                         # uniform  quantile normal
-                        mtf = MarkovTransitionField(image_size=120,strategy='quantile',n_bins=10)
+                        mtf = MarkovTransitionField(image_size=120,strategy='quantile',n_bins=5)
                         
                         # print("x.shape",x.shape)
                         # print("x2.shape",x2.shape)
@@ -493,10 +513,10 @@ def main():
     s1 = timeit.default_timer()  
     # rd2(1,1)
     for ii in range(1,14):
-        get_split(ii)
+        # get_split(ii)
         get2sec(ii)
         save_data(ii)
-        load_data(ii)
+        # load_data(ii)
     
     s2 = timeit.default_timer()  
     print ('Runing time is (mins):',round((s2 -s1)/60,2))
