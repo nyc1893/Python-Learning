@@ -47,6 +47,12 @@ def Modified_Z(data):
     return z_score
     
 
+def remove_z(str):
+    if str[0] == '0':
+        return str[1]
+    else:
+        return str
+        
 def rm3(X,y):
     """
     THIS FUNCTION REMOVES THE PLANNED EVENTS FROM THE EVENT DATASET
@@ -62,7 +68,7 @@ def rm3(X,y):
     for i in range(len(y)):
         #print(i)
         temp = y[i,2].split("_")
-        ww = temp[0]+"_"+temp[1]+"_"+temp[2]+"_"+temp[3]
+        ww = temp[0]+"_"+temp[1]+"_"+remove_z(temp[2])+"_"+temp[3]
         # print(np.isin(ww,df))
 
         if(np.isin(ww,df)==False):
@@ -99,8 +105,7 @@ def rm3(X,y):
             
         
         
-    return  np.array(X_new), np.array(y_new)    
-    
+    return  np.array(X_new), np.array(y_new)
 
 def rd_rof(ii):
     path1 = '../pickleset1/'
