@@ -1,3 +1,5 @@
+# This code is to find out the mutilabel events and it statics
+
 import pandas as pd
 import numpy as np
 import pyarrow.parquet as pq
@@ -10,7 +12,7 @@ from datetime import datetime
 
 import timeit
 
-# This code is to check if there is difference between extracted and data
+
 
 def fun2(ii):
 
