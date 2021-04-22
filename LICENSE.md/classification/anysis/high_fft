@@ -1,0 +1,65 @@
+import numpy as np
+from scipy.fftpack import fft
+import matplotlib.pyplot as plt
+from matplotlib.pylab import mpl
+
+mpl.rcParams['font.sans-serif'] = ['SimHei']  # 显示中文
+mpl.rcParams['axes.unicode_minus'] = False  # 显示负号
+
+def find_max(x):
+    ind = []
+    res = []
+    for i in range(1,x.shape[0]-1):
+        if(x[i-1]<x[i] and x[i+1]<x[i]):
+            ind.append(i)
+            res.append(x[i])
+    print(ind)
+    return ind
+# define how much sec you want
+# longer time then higher freq resolution
+
+def high_fft():
+    cc = 10*60
+    # sample rate
+    rate = 60
+    N = rate*cc
+    x = np.linspace(0, 1*cc, N)
+    print(x.shape)
+    # 设置需要采样的信号，频率分量有0，200，400和600
+    # y = 7 * np.sin(2 * np.pi * 200 * x) + 5 * np.sin(
+        # 2 * np.pi * 400 * x) + 3 * np.sin(2 * np.pi * 600 * x) + 10
+        
+    y = 2 * np.sin(2 * np.pi * 20.1 * x) + 5 * np.sin(2 * np.pi * 20.11* x) 
+    # y = input
+    fft_y = fft(y)  # 快速傅里叶变换
+
+    x = np.arange(N)/cc  # 频率个数
+    half_x = x[range(int(N / 2))]   # 取一半区间
+
+    angle_y = np.angle(fft_y)       # 取复数的角度
+
+    abs_y = np.abs(fft_y)               # 取复数的绝对值，即复数的模(双边频谱)
+    normalization_y = abs_y / (N / 2)   # 归一化处理（双边频谱）
+    normalization_y[0] /= 2             # 归一化处理（双边频谱）
+    normalization_half_y = normalization_y[range(int(N / 2))]  # 由于对称性，只取一半区间（单边频谱）
+
+
+
+
+
+    # plt.subplot(212)
+    print(half_x.shape)
+    print(normalization_half_y.shape)
+    plt.plot(half_x[12000:12100], normalization_half_y[12000:12100], 'blue')
+    ind2 = find_max(normalization_half_y)
+    for i in range(len(ind2)):
+        plt.scatter(ind2[i]/cc,normalization_half_y[ind2[i]],marker='p',c='',edgecolors='r',zorder=10)
+        print(ind2[i]/cc)
+        
+    # plt.scatter(20.11,normalization_half_y[66+12000],marker='p',c='',edgecolors='r',zorder=10)
+    plt.title('Spectrum', fontsize=20, color='blue')
+    plt.xlabel('Freq', fontsize=15, color='black')
+    plt.show()
+    
+    
+high_fft()
