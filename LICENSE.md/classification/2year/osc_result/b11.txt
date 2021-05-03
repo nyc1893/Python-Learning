@@ -1,4 +1,4 @@
-60Hz  power 
+60Hz  power  0.01Hz 0.01- 2Hz
 ******************* KNN ********************
 training took 1.026688s!
 training error
