@@ -30,3 +30,9 @@ To use Rclone:
 Go to Download/rclone... folder
 
 ./rclone ls unrbox:DOE_Big_Data_Project
+
+
+To install new software 
+1.  go to schroot -c ycliu
+2.  go to /etc/apt/sorces.list.d 
+   sudo apt update
