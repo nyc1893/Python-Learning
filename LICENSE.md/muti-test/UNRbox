@@ -21,3 +21,9 @@ When open xlaunch, try to use another port (here we use No.10)
 
 xterm??
 
+To use Rclone:
+
+
+Go to Download/rclone... folder
+
+./rclone ls unrbox:DOE_Big_Data_Project
