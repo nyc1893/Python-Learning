@@ -1,0 +1,23 @@
+Email from Zach:
+
+
+Connect to https://remote.engr.unr.edu
+
+ 
+
+Windows Key -> Search for  ‘XLaunch’ -> Execute and accept all the Defaults
+Launch Cygwin Terminal then type in the following:
+export DISPLAY=:0
+ssh -Y $your_cse_id@gpuh.cse.unr.edu
+Launch firefox in the background
+nohup firefox &
+Go through the rclone Box client configuration
+choose USER/enterprise for UNR box
+choose DEFAULT/remote connect
+
+
+The problem is A fatal error has occurred and Cygwin/X will now exit.
+When open xlaunch, try to use another port (here we use No.10)
+
+xterm??
+
