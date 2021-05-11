@@ -21,6 +21,9 @@ When open xlaunch, try to use another port (here we use No.10)
 
 xterm??
 
+If there exist an out-dated cofig file then:
+rm -rf ~/.config/rclone
+
 To use Rclone:
 
 
