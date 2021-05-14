@@ -122,7 +122,7 @@ def deal(k,kk):
     flag = 1
     st=[]
     nn = len(rootpath)
-    n2 =300*23
+    # n2 =300*23
     # print('nn=',nn)
     # nn = 5*23
     # with open("abc.txt", 'w') as f:
@@ -139,7 +139,7 @@ def deal(k,kk):
             # print('hahas')
             if (df['df'].isna().sum()!=0 or df['status'].isna().sum()!=0  or df['vp_m'].isna().sum()!=0):
                 flag = 0
-                
+                # list = ['rocof','vp_m','ip_m','vp_a','ip_a','ip_a_dif','f']
             if k == 0 and df['df'].shape[0] == num_time_sample:
                 st.append(df['df']) 
                 
@@ -221,7 +221,7 @@ def deal(k,kk):
     name = list[k]
     path3 = 'pickleset1/'
     # save features for all the events
-    pickle_out = open(path3 + "X_S"+str(kk)+"_"+str(name)+"_62.pickle","wb")
+    pickle_out = open(path3 + "X_S"+str(kk)+"_"+str(name)+"_6.pickle","wb")
     pickle.dump(features, pickle_out, protocol=2)
     pickle_out.close() 
     
@@ -239,7 +239,7 @@ def deal(k,kk):
     labels=np.concatenate((labels, b), axis=1)
     
     yy = pd.DataFrame(labels)
-    yy.to_csv(path3 +"y_S"+str(kk)+"_"+str(name)+"_62.csv",index =None)
+    yy.to_csv(path3 +"y_S"+str(kk)+"_"+str(name)+"_6.csv",index =None)
     print(yy.head())
 
 
@@ -255,8 +255,11 @@ pickle_out.close()
 
 def main():    
     s1 = timeit.default_timer() 
-    for kk in range(13,13+1):
-        deal(0,kk)
+    for kk in range(1,4+1):
+        deal(3,kk)
+        # list = ['rocof','vp_m','ip_m','vp_a','ip_a','ip_a_dif','f']
+        # 1st postion is the physical parameter
+        # 2nd postion is which season
     s2 = timeit.default_timer()  
     print ('Runing time is (mins):',round((s2 -s1)/60,2))
 if __name__ == '__main__':  
