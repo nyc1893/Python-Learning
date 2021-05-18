@@ -12,10 +12,10 @@ import pandas as pd
 
 
 import pickle
-
+import datapick
 import datetime
 from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
-# python getlabel.py 2>&1 | tee a.log
+# python getlabel.py 2>&1 | tee b1.log
 from sklearn import datasets
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import PolynomialFeatures
@@ -227,10 +227,11 @@ def readdata():
 
 def get_split(ii):        
     path = "ml/"
-    # df2 = pd.read_csv(path+"savefreq_23_"+str(ii)+".csv")
+    # df2 = pd.read_csv(path+"savefreq_10m_23_"+str(ii)+".csv")
+    df2 = pd.read_csv(path+"savefreq2_23_"+str(ii)+".csv")
     # y = df2["label"].values
     
-    df2 = pd.read_csv(path+"savefreq_10m_23_"+str(ii)+".csv")
+    # df2 = pd.read_csv(path+"savefreq_10m_23_"+str(ii)+".csv")
     df2['r'] = -df2['upBar']/df2['downBar']
     df2['std'] = df2['upstd']+df2['downstd']
     df2 = df2.replace([np.inf, -np.inf], np.nan)
@@ -256,8 +257,8 @@ def mid_data(ii):
     list1 = tr.astype(int).tolist()
     list2 = val.astype(int).tolist()
     path = "ml/"
-    df2 = pd.read_csv(path+"savefreq_10m_23_"+str(ii)+".csv")
-    
+    # df2 = pd.read_csv(path+"savefreq_10m_23_"+str(ii)+".csv")
+    df2 = pd.read_csv(path+"savefreq2_23_"+str(ii)+".csv")
     
     
     df2['r'] = -df2['upBar']/df2['downBar']
@@ -278,38 +279,7 @@ def mid_data(ii):
 
     return X_train,y_train,X_val,y_val
     
-def mid_data2(ii):
 
-    path2 = 'index5/'
-    tr = np.load(path2+'tr_'+str(ii)+'.npy') 
-    val = np.load(path2+'val_'+str(ii)+'.npy') 
-    list1 = tr.astype(int).tolist()
-    list2 = val.astype(int).tolist()
-    path = "ml/"
-    df2 = pd.read_csv(path+"savedft_23_"+str(ii)+".csv")
-    
-    
-    # df2.23[df2.23!=3]=0
-    # df2.23[df2.23==3]=1
-    
-    y = df2.pop("23").values
-    # print(df2.head())
-    
-    temp = df2
-    df2["avg"] = temp.mean(axis=1)
-    df2["std"] = temp.std(axis=1)
-    df2["mm"] = temp.median(axis=1)
-    
-    df2 = df2[["avg","std","mm"]]
-    X = df2.values
-    
-    X_train = X[list1]
-    y_train = y[list1]
-    X_val = X[list2]
-    y_val = y[list2]
-
-    return X_train,y_train,X_val,y_val    
-    
 def top():
     X_train,y_train,X_val,y_val = mid_data(1)
     for ii in range(2,14):
@@ -320,7 +290,7 @@ def top():
         X_val = pd.concat([X_val, X_val2], axis=0)
         y_val = pd.concat([y_val, y_val2], axis=0)       
     
-    sav = 1
+    sav = 0
     if sav == 1:
         
         X_train['label'] = y_train
@@ -331,6 +301,8 @@ def top():
     X_val.pop("S")
     X_train.pop("No")
     X_val.pop("No")   
+    X_train.pop("eve_name")
+    X_val.pop("eve_name")      
     # X_train.pop("flag")
     # cc = X_val.pop("flag").values
     
@@ -345,12 +317,198 @@ def top():
     # print(np.where(y_train == 1)[0])
     # print(np.where(y_val == 1)[0])
     return X_train,y_train,X_val,y_val
+    
+    
+    
+def mid_vpm(ii):
+
+    path2 = 'index5/'
+    tr = np.load(path2+'tr_'+str(ii)+'.npy') 
+    val = np.load(path2+'val_'+str(ii)+'.npy') 
+    list1 = tr.astype(int).tolist()
+    list2 = val.astype(int).tolist()
+
+    X,y = datapick.rd_vpm(ii)
+    
+    X_train = X[list1]
+    y_train = y[list1]
+    X_val = X[list2]
+    y_val = y[list2]
+
+    return X_train,y_train,X_val,y_val
+    
+def mid_rof(ii):
+
+    path2 = 'index5/'
+    tr = np.load(path2+'tr_'+str(ii)+'.npy') 
+    val = np.load(path2+'val_'+str(ii)+'.npy') 
+    list1 = tr.astype(int).tolist()
+    list2 = val.astype(int).tolist()
+
+    X,y = datapick.rd_rof(ii)
+    
+    X_train = X[list1]
+    y_train = y[list1]
+    X_val = X[list2]
+    y_val = y[list2]
+
+    return X_train,y_train,X_val,y_val    
+    
+def mid_ipm(ii):
+
+    path2 = 'index5/'
+    tr = np.load(path2+'tr_'+str(ii)+'.npy') 
+    val = np.load(path2+'val_'+str(ii)+'.npy') 
+    list1 = tr.astype(int).tolist()
+    list2 = val.astype(int).tolist()
+
+    X,y = datapick.rd_ipm(ii)
+    
+    X_train = X[list1]
+    y_train = y[list1]
+    X_val = X[list2]
+    y_val = y[list2]
+
+    return X_train,y_train,X_val,y_val       
+    
+def pack_those1():    
+    X_train,y_train,X_val,y_val = mid_rof(1)
+    for ii in range(2,14):
+        X_train2,y_train2,X_val2,y_val2 = mid_rof(ii)
+
+        X_train = np.concatenate((X_train, X_train2), axis=0)
+        y_train = np.concatenate((y_train, y_train2), axis=0)
+        X_val = np.concatenate((X_val, X_val2), axis=0)
+        y_val = np.concatenate((y_val, y_val2), axis=0)
+        
+    X_train,y_train = rm_freq(X_train,y_train)
+    # X_val,y_val = rm_freq(X_val,y_val)
+    return X_train,y_train,X_val,y_val
+
+        
+def pack_those2():    
+    X_train,y_train,X_val,y_val = mid_vpm(1)
+    for ii in range(2,14):
+        X_train2,y_train2,X_val2,y_val2 = mid_vpm(ii)
+
+        X_train = np.concatenate((X_train, X_train2), axis=0)
+        y_train = np.concatenate((y_train, y_train2), axis=0)
+        X_val = np.concatenate((X_val, X_val2), axis=0)
+        y_val = np.concatenate((y_val, y_val2), axis=0)
+        
+
+    X_train,y_train = rm_freq(X_train,y_train)
+    # X_val,y_val = rm_freq(X_val,y_val)
+    return X_train,y_train,X_val,y_val
+  
+def pack_those3():    
+    X_train,y_train,X_val,y_val = mid_vpm(1)
+    for ii in range(2,14):
+        X_train2,y_train2,X_val2,y_val2 = mid_vpm(ii)
+
+        X_train = np.concatenate((X_train, X_train2), axis=0)
+        y_train = np.concatenate((y_train, y_train2), axis=0)
+        X_val = np.concatenate((X_val, X_val2), axis=0)
+        y_val = np.concatenate((y_val, y_val2), axis=0)
+        
+
+    X_train,y_train = rm_freq(X_train,y_train)
+    # X_val,y_val = rm_freq(X_val,y_val)    
+    return X_train,y_train,X_val,y_val
+    
+def pack_all():
+    X_train,y_train,X_val,y_val = pack_those1()
+    X_train2,y_train2,X_val2,y_val2 = pack_those2()
+    
+    X_train = np.concatenate((X_train, X_train2), axis=3)
+    X_val = np.concatenate((X_val, X_val2), axis=3)
+ 
+
+    X_train2,y_train2,X_val2,y_val2 = pack_those3()
+    
+    X_train = np.concatenate((X_train, X_train2), axis=3)
+    X_val = np.concatenate((X_val, X_val2), axis=3)
+
+    y_val[y_val==2]=0
+    y_val[y_val==3]=2
+    from collections import Counter
+    print(Counter(y_val.flatten()))
+    print(Counter(y_train.flatten()))
+    
+    print(X_train.shape)
+    print(y_train.shape)
+    print(X_val.shape)
+    print(y_val.shape)    
+    return X_train,y_train,X_val,y_val
+    
+def rm_freq(X,y):
+    X_new=[]
+    y_new=[]
+    for i in range(y.shape[0]):
+        if y[i]==0:
+            y_new.append(0)
+            X_new.append(X[i,:,:,:])
+
+        elif y[i]==1:
+            y_new.append(1)
+            X_new.append(X[i,:,:,:])
+
+
+        elif y[i]==3:
+            y_new.append(2)
+            X_new.append(X[i,:,:,:])
+    return  np.array(X_new), np.array(y_new)
+
+def cc(ii):
+
+    path2 = 'index5/'
+    tr = np.load(path2+'tr_'+str(ii)+'.npy') 
+    val = np.load(path2+'val_'+str(ii)+'.npy') 
+    list1 = tr.astype(int).tolist()
+    list2 = val.astype(int).tolist()
+    path = "ml/"
+    # df2 = pd.read_csv(path+"savefreq_10m_23_"+str(ii)+".csv")
+    df2 = pd.read_csv(path+"savefreq2_23_"+str(ii)+".csv")
+    
+    
+    df2['r'] = -df2['upBar']/df2['downBar']
+    df2['std'] = df2['upstd']+df2['downstd']
+    df2.pop('ref')
+    df2 = df2.replace([np.inf, -np.inf], np.nan)
+    df2 = df2.dropna()
+    df2.label[df2.label!=2]=0
+    df2.label[df2.label==2]=1
+    y = df2.pop("label")
+    # print(df2.head())
+    X = df2
+    
+
+    
+    X_train = X.iloc[list1]
+    y_train = y.iloc[list1]
+    X_val = X.iloc[list2]
+    y_val = y.iloc[list2]
+
+    
+    dt = X_val[X_val["eve_name"] == "2017_Oct_09_8_Frequency"]
+    print(dt)
+
+
+    dt = X_val[X_val["eve_name"] == "2017_Oct_09_9_Frequency"]
+    print(dt)
+
+    
 def main():
+    s1 = timeit.default_timer()  
     # for i in range(1,14):
         # get_split(i)
-    top()
-    # run()
-    # 
+    run()
+    # cc(12)
+    # top()
+    # pack_all()
+    s2 = timeit.default_timer()
+    #running time
+    print('Time: ', (s2 - s1)/60 )
 if __name__ == '__main__':  
 
     main()
