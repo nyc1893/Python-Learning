@@ -18,7 +18,7 @@ list =[]
 arr = np.load("tr_12.npy").tolist()
 print(arr)
 for i in range(len(arr)): 
-    if(arr[i]!= 86 or arr[i]!= 85 ):
+    if(arr[i]!= 86 and arr[i]!= 85 ):
         list.append(arr[i])
         
 arr = np.array(list)
