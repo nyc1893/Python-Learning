@@ -237,13 +237,21 @@ def rd4(k,i):
 def Modified_Z(data):
     c = 1.4826
     median = np.median(data)
-    print(median)
-    print("median.shape",median.shape)
+    # print(median)
+    # print("median.shape",median.shape)
     dev_med = np.array(data) -median
-    print("dev_med.shape",dev_med.shape)
+    # print("dev_med.shape",dev_med.shape)
     mad = np.median(np.abs(dev_med))
-    z_score = dev_med/(mad*mad)
+    if mad!=0:
+        
+        z_score = dev_med/(c*mad)
+    else : 
+        df = pd.DataFrame(data)
+        meanAD = df.mad().values
+        z_score =  dev_med/(1.253314*meanAD)
+        
     return z_score
+    
 
 
 def rd_split(): 
