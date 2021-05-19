@@ -19,3 +19,6 @@ python2   -m pip install SomePackage  # default Python 2
 python2.7 -m pip install SomePackage  # specifically Python 2.7
 python3   -m pip install SomePackage  # default Python 3
 python3.7 -m pip install tensorflow==2.1.0
+
+conda install XX
+conda install -c conda-forge XX
