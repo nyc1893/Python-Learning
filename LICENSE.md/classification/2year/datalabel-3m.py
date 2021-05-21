@@ -147,7 +147,19 @@ def deal(k,kk):
                 
             elif k == 2 and df['ip_m'][4*3600:7*3600].shape[0] == 10800:
                 st.append(df['ip_m'][4*3600:7*3600]) 
-               
+                
+            elif k == 3 and df['vp_a'][4*3600:7*3600].shape[0] == num_time_sample:
+                st.append(df['vp_a'][4*3600:7*3600])    
+ 
+            elif k == 4 and df['ip_a'][4*3600:7*3600].shape[0]== num_time_sample:
+                st.append(df['ip_a'][4*3600:7*3600])   
+
+                
+            elif k == 5 and df['ip_a_diff_grad'][4*3600:7*3600].shape[0]== num_time_sample:
+                st.append(df['ip_a_diff_grad'][4*3600:7*3600])   
+ 
+            elif k == 6 and df['f'][4*3600:7*3600].shape[0]== num_time_sample:
+                st.append(df['f'][4*3600:7*3600])                  
             # elif k == 2 and df['df'].shape[0] == 36000:
                 # st.append(df['df']) 
                                
@@ -202,7 +214,7 @@ def deal(k,kk):
     num_samples,h,w=features.shape
     features=features.reshape(num_samples, h, w,1) # add a channel dimension in order for Keras to be compatible
 
-    list = ['rocof','vp_m','ip_m']
+    list = ['rocof','vp_m','ip_m','vp_a','ip_a','ip_a_dif','f']
     name = list[k]
     path3 = 'pickleset2/'
     # save features for all the events
@@ -240,15 +252,16 @@ pickle_out.close()
 
 
 
-def main(kk):    
+def main():    
     s1 = timeit.default_timer() 
-    deal(0,kk)
+    for i in range(5,6):
+        deal(4,i)
     s2 = timeit.default_timer()  
     print ('Runing time is (mins):',round((s2 -s1)/60,2))
 if __name__ == '__main__':  
-    kk = int(sys.argv[1])
+    # kk = int(sys.argv[1])
     # for kk in range(1,7):
-    main(kk)
+    main()
 
 
 
