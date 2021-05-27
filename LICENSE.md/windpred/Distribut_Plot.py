@@ -2,7 +2,7 @@
 
 """
 This is to plot the figure of Point and Distributional forecast
-But no distributional
+All in the Times New roman
 """
 
 import os
