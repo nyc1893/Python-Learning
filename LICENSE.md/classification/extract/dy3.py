@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """
+Make changes based on the sources file use "utc" column as the time index
 Created on 5/24/2021
 @author: Barron
 """
@@ -19,6 +20,10 @@ def Extract_event(filename,start_time,savename):
 
     # df2 = pd.read_csv(file2)
     df = pd.read_parquet(filename)
+    if "utc" in df.columns:
+        df['utc'] = pd.to_datetime(df['utc'])
+        df.set_index("utc", inplace=True)        
+            
     df = df.sort_index()
     
 
@@ -43,7 +48,7 @@ def Extract_event(filename,start_time,savename):
 def main():
     start = time.time()
     multiprocessing.freeze_support() 
-    findyear = 2017
+    findyear = 2016
     findmonth = int(sys.argv[1])
     findday= int(sys.argv[2])
     findtime = str(findyear)+str("-")+str(findmonth)+str("-")+str(findday)
@@ -90,7 +95,7 @@ def do(start_time,event_type,num):
     mm = list[report_time.month]
     dd = report_time.day
 
-    path = "/home/ycliu/box2/"
+    path = "/home/ycliu/2016C/"
     path2= path + "Positive_Sequence/theMonth="+str(report_time.month)+ "/theDay="+str(report_time.day)
     fileList=os.listdir(path2)
     for f in fileList:    
