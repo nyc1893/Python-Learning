@@ -16,7 +16,7 @@ import datapick2
 import datapick3
 import datetime
 from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
-# python getlabel2.py 2>&1 | tee bb2.log
+# python getlabel2.py 2>&1 | tee b2.log
 from sklearn import datasets
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import PolynomialFeatures
@@ -425,6 +425,7 @@ def rev_res():
     df2.to_csv("te3.csv",index = None)
 
 def replot():
+    from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
     df = pd.read_csv("te3.csv")
     df.pop("No")
     df.pop("word2")
@@ -435,12 +436,31 @@ def replot():
     print(type(ll))
     for i in range(1,ll.shape[0]):
         
-        predict = df[ll[i]]
-        print('testing error of ' + ll[i]) 
-        matrix=confusion_matrix(y_test, predict)
+        y_pred = df[ll[i]]
+        print('\n testing error of ' + ll[i]) 
+        print('\nAccuracy: {:.2f}\n'.format(accuracy_score(y_test, y_pred)))
+
+        print('Micro Precision: {:.2f}'.format(precision_score(y_test, y_pred, average='micro')))
+        print('Micro Recall: {:.2f}'.format(recall_score(y_test, y_pred, average='micro')))
+        print('Micro F1-score: {:.2f}\n'.format(f1_score(y_test, y_pred, average='micro')))
+
+        print('Macro Precision: {:.2f}'.format(precision_score(y_test, y_pred, average='macro')))
+        print('Macro Recall: {:.2f}'.format(recall_score(y_test, y_pred, average='macro')))
+        print('Macro F1-score: {:.2f}\n'.format(f1_score(y_test, y_pred, average='macro')))
+
+        print('Weighted Precision: {:.2f}'.format(precision_score(y_test, y_pred, average='weighted')))
+        print('Weighted Recall: {:.2f}'.format(recall_score(y_test, y_pred, average='weighted')))
+        print('Weighted F1-score: {:.2f}'.format(f1_score(y_test, y_pred, average='weighted')))    
+        
+        
+        
+        matrix=confusion_matrix(y_test, y_pred)
         print(matrix)
-        class_report=classification_report(y_test, predict)
+        class_report=classification_report(y_test, y_pred)
         print(class_report)
+        
+        
+
 def main():
     s1 = timeit.default_timer()  
     # for i in range(1,14):
