@@ -15,7 +15,7 @@ from scipy.linalg import svd
 import timeit
 from random import randint
 # import math
-
+# 
 
 
 def proces3(data,k):
@@ -45,6 +45,27 @@ def proces3(data,k):
     # print(st1.shape)
     return st1
     
+def proces2(data,k):
+    st1 =[]
+    data = np.squeeze(data)
+    
+    for j in range(0,data.shape[0]):
+        st2=[]
+        for i in range(0,data.shape[1]):
+            if(k == 0):
+                temp = data[j,i,:]/np.mean(data[j,i,:])
+            elif(k == 1):
+                temp = data[j,i,:]/np.mean(data[j,i,:])
+            elif(k == 2):
+                temp = data[j,i,:]        
+  
+            st2.append(temp)
+        st1.append(st2)
+
+    st1 = np.array(st1)
+    st1 = st1[:,:,np.newaxis,:]
+    # print(st1.shape)
+    return st1
     
 def proces(data,k):
     st1 =[]
@@ -126,7 +147,7 @@ def rd3(ii,k):
 
     X_train=X_train.transpose(0,1,3,2)
 
-    X_train = proces3(X_train,k) 
+    X_train = proces2(X_train,k) 
 
     return X_train,y_train
 
@@ -140,7 +161,7 @@ def rd_zeta(ii):
     
 def rd_zeta2(ii):
 
-    path1 = '../zeta_all/150/'
+    path1 = '../zeta_all/210/'
     p1 = open(path1 +'X_S'+str(ii)+'.pickle',"rb")
     pk1 = pickle.load(p1)
     print(pk1.shape)
@@ -152,9 +173,7 @@ def datapack(ii):
     for k in range(1,2+1):
         a2,_ = rd3(ii,k)
         a = np.concatenate((a, a2), axis=2)  
-    # st1,st2 = rd_power(ii)
-    # a = np.concatenate((a, st1), axis=2) 
-    # a = np.concatenate((a, st2), axis=2) 
+
     print(a.shape)
     print(y.shape)
     return a,y
@@ -210,7 +229,7 @@ def plot_f(ii):
             plt.savefig("S_"+str(ii)+"_"+str(j))                  
             v+=1
             
-            
+
 def get_info(x,j,feature,ind):
     up = []
     dn = []
@@ -218,9 +237,9 @@ def get_info(x,j,feature,ind):
     sdn = []
     dup =[]
     ddn =[]
-    
+    global reg
     for i in range(23):
-        temp = x[j,i,feature,ind-180:ind+180]
+        temp = x[j,i,feature,ind-reg:ind+reg]
         mm = np.mean(x[j,i,0, :])
         m1,m2 = cal_dif(temp)
         m3,m4 = cal_diparea(temp,mm)
@@ -243,15 +262,15 @@ def cal(ii):
     x,y = datapack(ii)
     x2 = rd_zeta(ii)
     x3 = rd_zeta2(ii)
-
+    global reg
     v= 0
     st =[]
     label=[]
     # and (y[j,0] ==0 or y[j,0] ==4 )
     for j in range(x.shape[0]):
         # if(v<5 ):
-        ind = np.argmax(x2[j,0])+200
-        ind2 = np.argmax(x3[j,0])+200
+        ind = np.argmax(x2[j,0])+reg+20
+        ind2 = np.argmax(x3[j,0])+reg+20
         print(ind)
         list_v_up = []
         list_v_dn = []
@@ -458,16 +477,17 @@ def add_order(ii):
         
     df["No"] = ll
     df.to_csv("data/Ss"+str(ii)+".csv",index= None)
-
+reg = 5*60
 def main():
     s1 = timeit.default_timer()  
+    
     # test()
     # cal(1)
     # pack()
     for ii in range(1,13+1):
-        # cal(ii)
-        # add_der(ii)
-        # fuu(ii)
+        cal(ii)
+        add_der(ii)
+        fuu(ii)
         add_order(ii)
     s2 = timeit.default_timer()
     print('Time:(min) ', (s2 - s1)/60 )
