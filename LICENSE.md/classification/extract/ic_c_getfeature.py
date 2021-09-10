@@ -51,48 +51,7 @@ def readfilelist(name):
     print(tt.shape)
     tt.to_csv(name+".csv",index = None)
 
-def save_freq(name):
 
-    # name = 'y2016_m5'
-    path = "./"+name+"/"
-    path2 = "../../ic_c/" + name
-    df = pd.read_csv(name+".csv").values
-    # print(df[0,1])
-    # temp = pq.read_table(source=path2+"/2016_Jan_31_0_Generator_C993.parquet").to_pandas()
-    # st = []
-    # st.append(temp["f"].values)
-    # print(st[:5])
-    # print(temp.head())
-    fileList=os.listdir(path2)
-
-    v = 0
-    for ii in range(df.shape[0]):
-        print(df[ii,1])
-        st1 =[]
-        st2 =[]
-        for f in fileList:
-            if(f.endswith(".parquet") and v<999):
-                if(df[ii,1] in f):
-                    x = f.split("_")
-
-                    temp = pq.read_table(source=path2+"/"+f).to_pandas()
-                    # print(temp.shape)
-                    # print(temp.head())
-                    a = temp["f"].values
-                    if(a.shape[0] == 18000):
-                        st1.append(a)
-                        st2.append(x[5].split(".")[0])
-                        v+=1
-        # st
-        st1 = pd.DataFrame(st1)
-        st1 = st1.transpose()
-        # print(st1.shape)
-        # print(len(st2))
-        st1.columns = st2
-        # print(st1.head())
-        savepath = "../freq/"
-        # st1.to_csv("f_"+df[0,1]+".csv",index= 0)
-        st1.to_parquet(savepath+df[ii,1]+".parquet") 
 
 
 def save_freq(name):
@@ -133,10 +92,17 @@ def save_freq(name):
         # print(st1.shape)
         # print(len(st2))
         st1.columns = st2
+        ll = list(st1)
+       
+        for i in range(len(ll)):
+            st1[ll[i]] = pd.to_numeric(st1[ll[i]])  
         # print(st1.head())
         savepath = "../freq/"
         # st1.to_csv("f_"+df[0,1]+".csv",index= 0)
-        st1.to_parquet(savepath+df[ii,1]+".parquet") 
+        if(st1.shape[0]!=0):
+            st1.to_parquet(savepath+df[ii,1]+".parquet") 
+        
+        
 
 
 def save_vpm(name):
@@ -177,10 +143,15 @@ def save_vpm(name):
         # print(st1.shape)
         # print(len(st2))
         st1.columns = st2
+        ll = list(st1)
+       
+        for i in range(len(ll)):
+            st1[ll[i]] = pd.to_numeric(st1[ll[i]])  
         # print(st1.head())
         savepath = "../vpm/"
         # st1.to_csv("f_"+df[0,1]+".csv",index= 0)
-        st1.to_parquet(savepath+df[ii,1]+".parquet") 
+        if(st1.shape[0]!=0):
+            st1.to_parquet(savepath+df[ii,1]+".parquet") 
 
 def save_ipm(name):
 
@@ -220,26 +191,88 @@ def save_ipm(name):
         st1 = st1.transpose()
         # print(st1.shape)
         # print(len(st2))
+        
         st1.columns = st2
-        # print(st1.head())
+        ll = list(st1)
+       
+        for i in range(len(ll)):
+            st1[ll[i]] = pd.to_numeric(st1[ll[i]])  
+            
         savepath = "../ipm/"
         # st1.to_csv("f_"+df[0,1]+".csv",index= 0)
-        st1.to_parquet(savepath+df[ii,1]+".parquet") 
+        if(st1.shape[0]!=0):
+            st1.to_parquet(savepath+df[ii,1]+".parquet") 
+            
+def save_rocof():
 
+    path2 = "../freq/"
+
+    fileList=os.listdir(path2)
+    savepath = "../rof/"
+    v = 0
+
+    for f in fileList:
+        if(f.endswith(".parquet") and v<999):
+            temp = pq.read_table(path2+f).to_pandas()
+            ll = list(temp)
+            
+            print(f)
+            # for i in range(len(ll)):
+                # temp[ll[i]] = pd.to_numeric(temp[ll[i]])  
+            temp2 = temp.copy()                
+            for i in range(len(ll)):
+                temp2[ll[i]] = temp[ll[i]].shift(-1)- temp[ll[i]] 
+            temp2.drop(temp2.tail(1).index,inplace=True)             
+   
+            temp2.to_parquet(savepath+f) 
+        
 def read_event():
     path2 = "../../ic_c/y2016_m1" 
-    temp = pq.read_table(source=path2+"/2016_Jan_30_0_Line_C930.parquet").to_pandas()
-    temp.head(15).to_csv("ss.csv",index = 0)
+    # temp = pq.read_table(source=path2+"/2016_Jan_30_0_Line_C930.parquet").to_pandas()
+    savepath = "../freq/"
+
+    temp = pq.read_table(savepath+"2016_Oct_7_3_Line.parquet").to_pandas()
+    print(temp.head())
+    print(temp.shape)
+    ll = list(temp)
+    print(ll)
+    for i in range(len(ll)):
+        temp[ll[i]] = pd.to_numeric(temp[ll[i]])    
+    
+    temp2 = temp.copy()
+    for i in range(len(ll)):
+        temp2[ll[i]] = temp[ll[i]].shift(-1)- temp[ll[i]] 
+    temp2.drop(temp2.tail(1).index,inplace=True) 
+    # print(temp2.head(5))
+    # print(temp2.tail(5))
+
+    temp2.to_csv("ss.csv",index = 0)
+
+def statics():
+    path2 = "../freq/"
+
+    fileList=os.listdir(path2)
+
+    s1 = 0
+    s2 =0
+    for f in fileList:
+        if("Line" in f):
+            s1+=1
+        if("Generator" in f):
+            s2+=1
+    print(s1)        
+    print(s2)
     
 def main():
 
     list3 = list(range(13))
     # kk = int(sys.argv[1])
-    for kk in range(2,12+1):
+    for kk in range(1,12+1):
         # readfilelist("y2016_m"+str(list3[kk]))
-        save_vpm("y2016_m"+str(list3[kk]))
-    
+        save_freq("y2016_m"+str(list3[kk]))
+    # save_rocof()
     # read_event()
+    # statics()
 if __name__ == '__main__':  
 
     main()
