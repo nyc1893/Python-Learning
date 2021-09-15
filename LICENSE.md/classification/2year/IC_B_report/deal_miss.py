@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on 6/18/2020 2020
+Created on 9/15/2021  
 This one extract and package the Freq, vpm ipm data for zeta calculation
 Also handle the some event that missing in precious Iman extracted version.
  
