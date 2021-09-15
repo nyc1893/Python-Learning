@@ -1,5 +1,11 @@
-
-# This one generate the finial event log
+# -*- coding: utf-8 -*-
+"""
+Created on 9/15/2021  
+This one generate the finial event log, 
+and also convert the difference time from ind to date_time format
+@author: Barron
+"""
+# 
 
 import pandas as pd
 import numpy as np
