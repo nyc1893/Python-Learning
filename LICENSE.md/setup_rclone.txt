@@ -1,0 +1,12 @@
+
+Connect to https://remote.engr.unr.edu
+
+ 
+
+Windows Key -> Search for  XLaunch  -> Execute and accept all the Defaults
+Launch Cygwin Terminal then type in the following:
+export DISPLAY=:0
+ssh -Y $your_cse_id@gpuh.cse.unr.edu
+Launch firefox in the background
+nohup firefox &
+Go through the rclone Box client configuration
