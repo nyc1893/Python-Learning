@@ -1,0 +1,471 @@
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/sklearn/semi_supervised/_label_propagation.py:205: RuntimeWarning: invalid value encountered in true_divide
+  probabilities /= normalizer
+Runing time is (mins): 0.08
+Runing time is (mins): 0.07
+(2170,)
+(2170,)
+Time:(min)  0.4236325853659461
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+(928, 8)
+(2170, 8)
+Label Model Accuracy:     50.7%
+SNO
+
+Accuracy: 0.51
+
+Macro Precision: 0.48
+Macro Recall: 0.43
+Macro F1-score: 0.43
+
+Maj
+
+Accuracy: 0.67
+
+Macro Precision: 0.43
+Macro Recall: 0.63
+Macro F1-score: 0.43
+
+rf_pred
+
+Accuracy: 0.71
+
+Macro Precision: 0.66
+Macro Recall: 0.68
+Macro F1-score: 0.67
+
+semi
+
+Accuracy: 0.56
+
+Macro Precision: 0.33
+Macro Recall: 0.32
+Macro F1-score: 0.31
+
+wk_2_test update done
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/sklearn/semi_supervised/_label_propagation.py:205: RuntimeWarning: invalid value encountered in true_divide
+  probabilities /= normalizer
+Runing time is (mins): 0.08
+Runing time is (mins): 0.07
+(2170,)
+(2170,)
+Time:(min)  0.40499772995050687
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+(928, 8)
+(2170, 8)
+Label Model Accuracy:     58.6%
+SNO
+
+Accuracy: 0.59
+
+Macro Precision: 0.44
+Macro Recall: 0.45
+Macro F1-score: 0.44
+
+Maj
+
+Accuracy: 0.68
+
+Macro Precision: 0.44
+Macro Recall: 0.66
+Macro F1-score: 0.44
+
+rf_pred
+
+Accuracy: 0.71
+
+Macro Precision: 0.66
+Macro Recall: 0.70
+Macro F1-score: 0.68
+
+semi
+
+Accuracy: 0.55
+
+Macro Precision: 0.33
+Macro Recall: 0.32
+Macro F1-score: 0.31
+
+wk_2_test update done
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/sklearn/semi_supervised/_label_propagation.py:205: RuntimeWarning: invalid value encountered in true_divide
+  probabilities /= normalizer
+Runing time is (mins): 0.08
+Runing time is (mins): 0.07
+(2170,)
+(2170,)
+Time:(min)  0.4175799878663383
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+(928, 8)
+(2170, 8)
+Label Model Accuracy:     57.3%
+SNO
+
+Accuracy: 0.57
+
+Macro Precision: 0.40
+Macro Recall: 0.43
+Macro F1-score: 0.41
+
+Maj
+
+Accuracy: 0.67
+
+Macro Precision: 0.43
+Macro Recall: 0.62
+Macro F1-score: 0.43
+
+rf_pred
+
+Accuracy: 0.71
+
+Macro Precision: 0.68
+Macro Recall: 0.69
+Macro F1-score: 0.69
+
+semi
+
+Accuracy: 0.55
+
+Macro Precision: 0.33
+Macro Recall: 0.32
+Macro F1-score: 0.31
+
+wk_2_test update done
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/sklearn/semi_supervised/_label_propagation.py:205: RuntimeWarning: invalid value encountered in true_divide
+  probabilities /= normalizer
+Runing time is (mins): 0.08
+Runing time is (mins): 0.08
+(2170,)
+(2170,)
+Time:(min)  0.4206006568352071
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+(928, 8)
+(2170, 8)
+Label Model Accuracy:     52.4%
+SNO
+
+Accuracy: 0.52
+
+Macro Precision: 0.38
+Macro Recall: 0.43
+Macro F1-score: 0.40
+
+Maj
+
+Accuracy: 0.69
+
+Macro Precision: 0.44
+Macro Recall: 0.69
+Macro F1-score: 0.44
+
+rf_pred
+
+Accuracy: 0.78
+
+Macro Precision: 0.67
+Macro Recall: 0.78
+Macro F1-score: 0.70
+
+semi
+
+Accuracy: 0.57
+
+Macro Precision: 0.34
+Macro Recall: 0.36
+Macro F1-score: 0.33
+
+wk_2_test update done
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/sklearn/semi_supervised/_label_propagation.py:205: RuntimeWarning: invalid value encountered in true_divide
+  probabilities /= normalizer
+Runing time is (mins): 0.08
+Runing time is (mins): 0.07
+(2170,)
+(2170,)
+Time:(min)  0.4183232991335293
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+(928, 8)
+(2170, 8)
+Label Model Accuracy:     58.4%
+SNO
+
+Accuracy: 0.58
+
+Macro Precision: 0.51
+Macro Recall: 0.46
+Macro F1-score: 0.48
+
+Maj
+
+Accuracy: 0.68
+
+Macro Precision: 0.43
+Macro Recall: 0.65
+Macro F1-score: 0.44
+
+rf_pred
+
+Accuracy: 0.73
+
+Macro Precision: 0.64
+Macro Recall: 0.70
+Macro F1-score: 0.67
+
+semi
+
+Accuracy: 0.57
+
+Macro Precision: 0.36
+Macro Recall: 0.37
+Macro F1-score: 0.35
+
+wk_2_test update done
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/sklearn/semi_supervised/_label_propagation.py:205: RuntimeWarning: invalid value encountered in true_divide
+  probabilities /= normalizer
+Runing time is (mins): 0.07
+Runing time is (mins): 0.07
+(2170,)
+(2170,)
+Time:(min)  0.40794153545090617
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+(928, 8)
+(2170, 8)
+Label Model Accuracy:     60.1%
+SNO
+
+Accuracy: 0.60
+
+Macro Precision: 0.53
+Macro Recall: 0.47
+Macro F1-score: 0.48
+
+Maj
+
+Accuracy: 0.67
+
+Macro Precision: 0.42
+Macro Recall: 0.62
+Macro F1-score: 0.41
+
+rf_pred
+
+Accuracy: 0.78
+
+Macro Precision: 0.69
+Macro Recall: 0.76
+Macro F1-score: 0.71
+
+semi
+
+Accuracy: 0.56
+
+Macro Precision: 0.34
+Macro Recall: 0.34
+Macro F1-score: 0.33
+
+wk_2_test update done
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/sklearn/semi_supervised/_label_propagation.py:205: RuntimeWarning: invalid value encountered in true_divide
+  probabilities /= normalizer
+Runing time is (mins): 0.08
+Runing time is (mins): 0.08
+(2170,)
+(2170,)
+Time:(min)  0.41421343496767804
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+(928, 8)
+(2170, 8)
+Label Model Accuracy:     43.1%
+SNO
+
+Accuracy: 0.43
+
+Macro Precision: 0.31
+Macro Recall: 0.39
+Macro F1-score: 0.34
+
+Maj
+
+Accuracy: 0.68
+
+Macro Precision: 0.42
+Macro Recall: 0.62
+Macro F1-score: 0.43
+
+rf_pred
+
+Accuracy: 0.73
+
+Macro Precision: 0.66
+Macro Recall: 0.69
+Macro F1-score: 0.67
+
+semi
+
+Accuracy: 0.56
+
+Macro Precision: 0.33
+Macro Recall: 0.33
+Macro F1-score: 0.31
+
+wk_2_test update done
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/sklearn/semi_supervised/_label_propagation.py:205: RuntimeWarning: invalid value encountered in true_divide
+  probabilities /= normalizer
+Runing time is (mins): 0.08
+Runing time is (mins): 0.07
+(2170,)
+(2170,)
+Time:(min)  0.41721264038351363
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+(928, 8)
+(2170, 8)
+Label Model Accuracy:     55.3%
+SNO
+
+Accuracy: 0.55
+
+Macro Precision: 0.41
+Macro Recall: 0.44
+Macro F1-score: 0.42
+
+Maj
+
+Accuracy: 0.68
+
+Macro Precision: 0.43
+Macro Recall: 0.62
+Macro F1-score: 0.43
+
+rf_pred
+
+Accuracy: 0.70
+
+Macro Precision: 0.64
+Macro Recall: 0.69
+Macro F1-score: 0.66
+
+semi
+
+Accuracy: 0.56
+
+Macro Precision: 0.34
+Macro Recall: 0.34
+Macro F1-score: 0.33
+
+wk_2_test update done
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/sklearn/semi_supervised/_label_propagation.py:205: RuntimeWarning: invalid value encountered in true_divide
+  probabilities /= normalizer
+Runing time is (mins): 0.08
+Runing time is (mins): 0.07
+(2170,)
+(2170,)
+Time:(min)  0.42896936225006355
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+(928, 8)
+(2170, 8)
+Label Model Accuracy:     56.4%
+SNO
+
+Accuracy: 0.56
+
+Macro Precision: 0.51
+Macro Recall: 0.45
+Macro F1-score: 0.47
+
+Maj
+
+Accuracy: 0.68
+
+Macro Precision: 0.44
+Macro Recall: 0.67
+Macro F1-score: 0.45
+
+rf_pred
+
+Accuracy: 0.76
+
+Macro Precision: 0.66
+Macro Recall: 0.73
+Macro F1-score: 0.69
+
+semi
+
+Accuracy: 0.56
+
+Macro Precision: 0.34
+Macro Recall: 0.35
+Macro F1-score: 0.33
+
+wk_2_test update done
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/sklearn/semi_supervised/_label_propagation.py:205: RuntimeWarning: invalid value encountered in true_divide
+  probabilities /= normalizer
+Runing time is (mins): 0.08
+Runing time is (mins): 0.07
+(2170,)
+(2170,)
+Time:(min)  0.42057242413284257
+/home/ycliu/anaconda3/envs/spam/lib/python3.7/site-packages/joblib/_multiprocessing_helpers.py:45: UserWarning: [Errno 13] Permission denied.  joblib will operate in serial mode
+  warnings.warn('%s.  joblib will operate in serial mode' % (e,))
+(928, 8)
+(2170, 8)
+Label Model Accuracy:     59.3%
+SNO
+
+Accuracy: 0.59
+
+Macro Precision: 0.51
+Macro Recall: 0.46
+Macro F1-score: 0.47
+
+Maj
+
+Accuracy: 0.68
+
+Macro Precision: 0.45
+Macro Recall: 0.67
+Macro F1-score: 0.46
+
+rf_pred
+
+Accuracy: 0.71
+
+Macro Precision: 0.66
+Macro Recall: 0.69
+Macro F1-score: 0.67
+
+semi
+
+Accuracy: 0.57
+
+Macro Precision: 0.34
+Macro Recall: 0.34
+Macro F1-score: 0.32
+
+wk_2_test update done
+Runing time is mins: 5.16
