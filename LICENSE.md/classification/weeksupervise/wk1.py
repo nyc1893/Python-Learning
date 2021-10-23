@@ -1,227 +1,182 @@
-
-
-import numpy as np
-import math
-import pandas as pd
-import time  
-from sklearn import metrics  
-import pickle as pickle  
-import timeit
-import matplotlib.pyplot as plt
-from scipy.linalg import svd 
-# import time
-import timeit
-from random import randint
+# from sklearn.datasets import make_moons
 from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
+import pickle as pickle  
+import pandas as pd
+import numpy as np
+from sklearn.metrics import f1_score
+from sklearn.metrics import precision_recall_fscore_support
+import warnings
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
+warnings.filterwarnings('ignore')
 
-def div_half():
-    path = "data/"
-    df = pd.read_csv(path+ "X_train.csv")
-    df1 = df[df.index%2==0]
-    df2 = df[df.index%2==1]
-
-    df1.to_csv(path+"X_r.csv",index = 0)
-    df2.to_csv(path+"X_n.csv",index = 0)
-    print("save done")
-
-def top():
-    path = "data/"
-    df1 = pd.read_csv(path+"X_r.csv")
-    df2 = pd.read_csv(path+"X_n.csv")   
-    train_y = df1.pop("label") 
-    test_y = df2.pop("label")
-    
-    df1.pop("word")
-    df1.pop("word2")
-    df1.pop("season")
-    df1.pop("No")
-    
-    df2.pop("word")
-    df2.pop("word2")
-    df2.pop("season")
-    df2.pop("No")   
-    
-    train_x = df1
-    test_x = df2
-    return train_x, train_y,test_x, test_y
-    
-# KNN Classifier  
-def knn_classifier(train_x, train_y):  
-    from sklearn.neighbors import KNeighborsClassifier  
-    model = KNeighborsClassifier()  
-    model.fit(train_x, train_y)  
-    return model  
-  
-  
-# Logistic Regression Classifier  
-def logistic_regression_classifier(train_x, train_y):  
-    from sklearn.linear_model import LogisticRegression  
-    model = LogisticRegression(penalty='l2')  
-    model.fit(train_x, train_y)  
-    return model  
-  
-def naive_bayes_classifier(train_x, train_y): 
-  from sklearn.naive_bayes import MultinomialNB 
-  model = MultinomialNB(alpha=0.01) 
-  model.fit(train_x, train_y) 
-  return model 
-  
 # Random Forest Classifier  
 def random_forest_classifier(train_x, train_y):  
     from sklearn.ensemble import RandomForestClassifier  
     model = RandomForestClassifier(n_estimators=100)  
     model.fit(train_x, train_y)  
     return model  
-  
-  
-# Decision Tree Classifier  
-def decision_tree_classifier(train_x, train_y):  
-    from sklearn import tree  
-    model = tree.DecisionTreeClassifier()  
-    model.fit(train_x, train_y)  
-    return model  
-  
-  
-# GBDT(Gradient Boosting Decision Tree) Classifier  
-def gradient_boosting_classifier(train_x, train_y):  
-    from sklearn.ensemble import GradientBoostingClassifier  
-    model = GradientBoostingClassifier(n_estimators=200)  
-    model.fit(train_x, train_y)  
-    return model  
-  
-  
-# SVM Classifier  
-def svm_classifier(train_x, train_y):  
-    from sklearn.svm import SVC  
-    model = SVC(kernel='rbf', probability=True)  
-    model.fit(train_x, train_y)  
-    return model  
-  
-def LF_1(df):  
-    # df = train_x.copy()
-    df["LF1"] = 0
-    df.loc[(df.r1>1),"LF1" ] = 2
-    return df
+from sklearn.utils import shuffle
+
+def filter_data():
+    path = "data/"
+    df2 = pd.read_csv(path+"X_train.csv")
+    df4 = df2[df2["label"] == 0]
+    df5 = df2[df2["label"] == 2]
     
-def LF_2(df):  
-    # df = train_x.copy()
-    df["LF2"] = 0
-    df.loc[(df.r3>1),"LF2" ] = 2
-    return df
-
-def LF_3(df):  
-    # df = train_x.copy()
-    df["LF3"] = 0
-    df.loc[(df.mean_i_up<10),"LF3" ] = 1
-    return df
+    df1 = df2[df2["label"] == 1]
+    print(df1.shape)
+    # df3 = df1[(df1["max_v_dup"] > 0.01) | (df1["max_v_ddn"] >0.005)
+    # | (df1["max_v_adn"] > 2)| (df1["max_v_aup"] > 0.07)]
     
-
-def get_nosiy_label():
-    # data_file = "H:\\Research\\data\\trainCG.csv"  
-    s1 = timeit.default_timer()  
-
-    train_x, train_y,test_x, test_y = top()   
-
-    X_train = train_x
-    X_test = test_x
+    # df4 = df4[(df4["max_v_dup"] < 0.01) | (df4["max_v_ddn"] <0.005)
+    # | (df4["max_v_adn"] <2)| (df4["max_v_aup"] < 0.07)]
+    df3 = df1
+    df  = pd.concat([df4, df5])
+    df  = pd.concat([df, df3])   
+    df = shuffle(df)
+    X_train = df
+    df2 = pd.read_csv(path+"X_val.csv")
+    df4 = df2[df2["label"] == 0]
+    df5 = df2[df2["label"] == 2]
     
-    y_test = test_y
-    y_train = train_y
- 
+    df1 = df2[df2["label"] == 1]
+    print(df1.shape)
+    # df3 = df1[(df1["max_v_dup"] > 0.01) | (df1["max_v_ddn"] >0.005)
+    # | (df1["max_v_adn"] > 2)| (df1["max_v_aup"] > 0.07)]
 
-    train = 1
-    if train == 1:
-        thresh = 0.5  
-        model_save_file = None  
-        model_save = {}  
-       
-        test_classifiers = [
-            # 'NB',
-             'KNN', 
-             'LR', 
-            # 'RF', 
-            'DT', 
-            'SVM',
+    # df4 = df4[(df4["max_v_dup"] < 0.01) | (df4["max_v_ddn"] <0.005)
+    # | (df4["max_v_adn"] <2)| (df4["max_v_aup"] < 0.07)]
+    
+    df3 = df1
+    df  = pd.concat([df4, df5])
+    df  = pd.concat([df, df3])   
+    df = shuffle(df)
+    X_test = df
+    
+    return X_train,X_test
+    
+# def detrans(y):
+    # yy = np.copy(y)
+    # yy[yy==1] = 0
+    # yy[yy==2] = 1
+    # yy[yy==3] = 2
+    # return yy
 
-            # 'GBDT'
-            ]  
-            
-            
-        classifiers = {
-        
-                    # 'NB':naive_bayes_classifier,   
-                      'KNN':knn_classifier,  
-                       'LR':logistic_regression_classifier,  
-                       # 'RF':random_forest_classifier,  
-                       'DT':decision_tree_classifier,  
-                      'SVM':svm_classifier,  
-                    # 'SVMCV':svm_cross_validation,  
-                     # 'GBDT':gradient_boosting_classifier  
-        }  
-          
-        # print('reading training and testing data...')  
-        # 
-        # print('train_y.shape',y_test.shape)
-        tr = pd.DataFrame(y_train)
-        tr.columns = ['real']
-        te = pd.DataFrame(y_test)
-        te.columns = ['real']
-        df  = y_test[:,np.newaxis]
-        df2 = y_train[:,np.newaxis]
-        
-        list = []
-        list.append('real')
-        
+# python wk2.py 2>&1 | tee sno.log
+def get_sno_label():
+    tr = pd.read_csv('data/wk_1_tr2.csv')
+    test = pd.read_csv('data/wk_1_test2.csv')
+    tr.pop("real")
+    test.pop("real")
+    
+    # tr2 = pd.read_csv('data/wk_1_tr2.csv')
+    # test2 = pd.read_csv('data/wk_1_test2.csv')
+    # tr2.pop("real")
+    # test2.pop("real")
 
-        for classifier in test_classifiers:  
-            print('******************* %s ********************' % classifier)  
-            start_time = time.time()  
-            model = classifiers[classifier](X_train, y_train)  
-            # print('training took %fs!' % (time.time() - start_time))  
-            predict = model.predict(X_test) 
-            train_out = model.predict(X_train)  
-            
-            tr[classifier] = train_out
-            te[classifier] = predict
-            matrix=confusion_matrix(y_test, predict)
-            print(matrix)
-            class_report=classification_report(y_test, predict)
-            print(class_report)
-        # X_train= LF_1(X_train)
-        # X_train= LF_2(X_train)
-        # X_train= LF_3(X_train)
-        
-        # X_test= LF_1(X_test)
-        # X_test= LF_2(X_test)
-        # X_test= LF_3(X_test)
-        
-        # tr["LF1"] = X_train["LF1"]
-        # tr["LF2"] = X_train["LF2"]
-        # tr["LF3"] = X_train["LF3"]
-        
-        # te["LF1"] = X_test["LF1"]
-        # te["LF2"] = X_test["LF2"]
-        # te["LF3"] = X_test["LF3"]
-        
-        # tr.to_csv("wk_1_tr.csv",index = None)
-        
-        # te.to_csv("wk_1_test.csv",index = None)
-        # print("result save done")
-    s2 = timeit.default_timer()  
-    print ('Runing time is (mins):',round((s2 -s1)/60,2))
+    # tr = pd.concat([tr,tr2],axis=1)
+    # test = pd.concat([test,test2],axis=1)   
+
+    tr2 = pd.read_csv('data/wk_1_tr.csv')
+    test2 = pd.read_csv('data/wk_1_test.csv')
+    tr2.pop("real")
+    test2.pop("real")
+    
+    tr = pd.concat([tr,tr2],axis=1)
+    test = pd.concat([test,test2],axis=1)  
+
+    # tr2 = pd.read_csv('data/wk_1_tr4.csv')
+    # test2 = pd.read_csv('data/wk_1_test4.csv')
+    # tr2.pop("real")
+    # test2.pop("real")
+    
+    # tr = pd.concat([tr,tr2],axis=1)
+    # test = pd.concat([test,test2],axis=1)  
+
+
+    y_tr = pd.read_csv('data/wk_1_tr5.csv').values
+    y_test = pd.read_csv('data/wk_1_test5.csv').values
     
 
-    
-    
-    
-def main():
-    s1 = timeit.default_timer()  
-    # div_half()
-    get_nosiy_label()
-    s2 = timeit.default_timer()
-    print('Time:(min) ', (s2 - s1)/60 )
-if __name__ == '__main__':  
+    tr = tr.values
+    test = test.values
 
-    main()
+    print(tr.shape)
+    print(test.shape)
+
+
+
+# def cc():
+    # arr = []
+    # for i in range(0,test.shape[0]):
+        # temp = test[i]
+        # arr.append(np.argmax(np.bincount(temp)))
+
+    # arr = np.array(arr)
+    # print('arrsize:',arr.shape)
+    from snorkel.labeling import LabelModel
+
+    label_model = LabelModel(cardinality= 3, verbose=True)
+    label_model.fit(L_train=tr, n_epochs=1500, log_freq=100, seed=123)
+
+
+    pred = label_model.predict(test)
+
+    label_model_acc = label_model.score(L=test, Y=y_test, tie_break_policy="random")[
+        "accuracy"]
+    print(f"{'Label Model Accuracy:':<25} {label_model_acc * 100:.1f}%")
+    tt = pd.read_csv('data/wk_1_test.csv')
+    
+    tt['SNO'] = pred
+    # tt['Maj'] = arr
+    # tt['rf_pred'] = rf_pred
+    # tt['real'] = tt["label"]
+    # semi = pd.read_csv('semi_res.csv')
+    # tt['SelfTrain'] = semi['SelfTrain']
+    # tt['LabelSpread'] = semi['LabelSpread']
+    tt.to_csv('wk_2_test.csv',index = None)
+
+def get_semi_label():
+    tt = pd.read_csv('data/wk_1_test5.csv')
+    print(tt.shape)
+    semi = pd.read_csv('semi_res.csv')
+    print(semi.shape)
+    # tt = tt.iloc[-semi.shape[0]:,:]
+    print(tt.shape)
+    tt['SelfTrain'] = semi['SelfTrain']
+    tt.to_csv('wk_2_test.csv',index = None)
+# get_semi_label()
+
+
+def esti():
+    df1 =pd.read_csv("data/wk_1_test5.csv").values
+    df2 = pd.read_csv("wk_2_test.csv")
+    df2 = df2["real"].values
+    print("SNO")
+    # matrix=confusion_matrix(df1, df2)
+    # print(matrix)
+    # class_report=classification_report(df1, df2)
+    # print(class_report)
+    print('Macro Precision: {:.2f}'.format(precision_score(df1, df2, average='macro')))
+    print('Macro Recall: {:.2f}'.format(recall_score(df1, df2, average='macro')))
+    print('Macro F1-score: {:.2f}\n'.format(f1_score(df1, df2, average='macro')))
+    
+    df2 = pd.read_csv('semi_res.csv').values
+    print("Semi")
+    # matrix=confusion_matrix(df1, df2)
+    # print(matrix)
+    # class_report=classification_report(df1, df2)
+    # print(class_report)
+    
+    print('Macro Precision: {:.2f}'.format(precision_score(df1, df2, average='macro')))
+    print('Macro Recall: {:.2f}'.format(recall_score(df1, df2, average='macro')))
+    print('Macro F1-score: {:.2f}\n'.format(f1_score(df1, df2, average='macro')))
+    
+# get_sno_label()
+# get_semi_label()
+# esti()
+# print('wk_2_test update done')
+
+
 
