@@ -1,5 +1,9 @@
-IC_B test Orignial 2016,2017 
+IC_B test Orignial 2016,2017:
 /pool1-home/ycliu/DOE_test/
+
+IC_B test extracted 2016,2017:
+/pool1-home/ycliu/py_file/oneday
+/pool1-home/ycliu/py_file/oneday17
 
 IC_C training Orignial 2016,2017 
 /pool1-home/ycliu/
