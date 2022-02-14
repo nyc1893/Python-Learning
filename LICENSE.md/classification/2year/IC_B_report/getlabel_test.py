@@ -1,4 +1,5 @@
-
+#run in GPUH, the result of the testing part detected event 
+# And there is one month data in 2016 and 2017 not used due to bad data
 
 # import matplotlib.pyplot as plt
 # import tensorflow as tf
