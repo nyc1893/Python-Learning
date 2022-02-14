@@ -1,4 +1,4 @@
-
+#run in GPUH, the result of the training part detected event not shown in the eventlog
 
 # import matplotlib.pyplot as plt
 # import tensorflow as tf
