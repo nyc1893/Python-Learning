@@ -29,10 +29,18 @@ name2 = "YC's sister"
 h2= 1.68
 w2= 55   
 
-name3 = "Yanei"
+name3 = "YC's brother"
 h3= 1.7
 w3= 90 
     
 print(BMI(name1,h1,w1))
 print(BMI(name2,h2,w2))
 print(BMI(name3,h3,w3))
+
+
+def covert(mile):
+    return 1.6*mile  
+
+mile = 120
+print(str(mile) +" miles is equal to " +str(covert(mile)) )
+
