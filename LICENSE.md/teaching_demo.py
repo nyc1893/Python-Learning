@@ -44,3 +44,54 @@ def covert(mile):
 mile = 120
 print(str(mile) +" miles is equal to " +str(covert(mile)) )
 
+
+
+
+##########################################
+def iter_fib(k):
+
+    counter = 0
+    first = 0
+    second = 1
+    temp = 0
+    
+    while counter <= k:
+        temp = first + second
+        first = second
+        second = temp
+        counter = counter + 1
+    return temp
+
+import time
+
+start = time.time()
+
+iter_fib(20)
+
+end = time.time()
+
+print(end - start)
+
+
+
+##########################################
+
+
+def recur_fibo(k):
+    if k <= 1:
+        return k
+    else:
+        return(recur_fibo(k-1) + recur_fibo(k-2))
+
+import time
+
+start = time.time()
+
+recur_fibo(20)
+
+end = time.time()
+
+print(end - start)
+
+
+
