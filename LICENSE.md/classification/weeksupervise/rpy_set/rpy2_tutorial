@@ -1,7 +1,7 @@
 How to make rpy2 works
 
-tested in Win10 + Rstduio
-tested in Linux Gpuh
+1. Win10 + Rstduio
+2. Linux Gpuh:  different package location problems
 
 Runs well in WIn10 + cmd
 step1, set envriomental variable
