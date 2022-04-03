@@ -1,0 +1,14 @@
+How to make rpy2 works
+
+tested in Win10 + Rstduio
+tested in Linux Gpuh
+
+Runs well in WIn10 + cmd
+step1, set envriomental 
+
+install.packages("XX")
+Some packages can not install directly
+but you need to
+e.g.,
+install.packages("BiocManager")
+BiocManager::install(c("graph", "RBGL"))
