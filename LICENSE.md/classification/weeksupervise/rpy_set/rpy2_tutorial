@@ -4,11 +4,23 @@ tested in Win10 + Rstduio
 tested in Linux Gpuh
 
 Runs well in WIn10 + cmd
-step1, set envriomental 
-
+step1, set envriomental variable
+step2, install the packages
 install.packages("XX")
 Some packages can not install directly
 but you need to
 e.g.,
 install.packages("BiocManager")
 BiocManager::install(c("graph", "RBGL"))
+
+
+I got the demo result:
+
+     buying maint doors persons lug_boot safety class
+buying        0     1     0       0        0      1     1
+maint         1     0     0       0        0      0     1
+doors         0     0     0       0        1      0     1
+persons       0     0     0       0        0      1     1
+lug_boot      0     0     1       0        0      1     1
+safety        1     0     0       1        1      0     1
+class         1     1     1       1        1      1     0
